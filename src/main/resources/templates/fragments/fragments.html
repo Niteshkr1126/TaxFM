@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+			xmlns:th="https://www.thymeleaf.org">
+
+<head th:fragment="head">
+	<meta charset="UTF-8">
+	<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+	<meta content="ie=edge" http-equiv="X-UA-Compatible">
+	<title th:text="${title}">Title</title>
+	<link rel="icon" type="image/x-icon" th:href="@{/images/common/taxFM_logo.jpeg}">
+	<link rel="stylesheet" th:href="@{/css/common/common.css}">
+	<link rel="stylesheet" th:href="@{/css/common/media-queries.css}">
+	<link rel="stylesheet" th:href="@{/css/landing/index.css}">
+	<link rel="stylesheet" th:href="@{/css/home/home.css}">
+	<link rel="stylesheet" th:href="@{/css/employees/employees.css}">
+	<link rel="stylesheet" th:href="@{/css/customers/customers.css}">
+</head>
+
+<!-- top banner -->
+
+<div class="top-banner" th:style="'background-image:url(' + @{/images/common/top-banner.png} + ');'"
+		 th:fragment="top-banner">
+	<div class="container">
+		<div class="small-bold-text banner-text"><span th:text="${topBannerCompanyName}"></span></div>
+	</div>
+</div>
+
+<!-- nav bar -->
+
+<nav th:fragment="nav-bar">
+	<div class="container main-nav flex">
+		<a class="company-logo" th:href="@{/home}" sec:authorize="isAuthenticated()"> <img alt="Company Logo" th:src="@{/images/common/taxFM_logo.jpeg}"></a>
+		<a class="company-logo" href="#home" sec:authorize="!isAuthenticated()"> <img th:alt="${topBannerCompanyName} + ' Logo'" th:src="@{/images/common/taxFM_logo.jpeg}"> </a>
+		<div class="nav-links" id="nav-links">
+			<ul class="flex">
+				<li><a class="hover-link" href="#home" sec:authorize="!isAuthenticated()">Home</a></li>
+				<li><a class="hover-link" href="#services" sec:authorize="!isAuthenticated()">Services</a></li>
+				<li><a class="hover-link" href="#about" sec:authorize="!isAuthenticated()">About Us</a></li>
+				<li><a class="hover-link" href="#team" sec:authorize="!isAuthenticated()">Our Team</a></li>
+				<li><a class="hover-link" href="#career" sec:authorize="!isAuthenticated()">Career</a></li>
+				<li><a class="hover-link" href="#contact" sec:authorize="!isAuthenticated()">Contact Us</a></li>
+				<li><a class="hover-link" th:href="@{/employees}" sec:authorize="isAuthenticated() and hasAuthority('ADMIN')">Employees</a></li>
+				<li><a class="hover-link" th:href="@{/customers}" sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR')">Customers</a></li>
+				<li><a class="hover-link" th:href="@{/profile}"
+							 sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR')">Profile</a></li>
+				<li><a class="hover-link secondary-button" th:href="@{/logout}" sec:authorize="isAuthenticated()">Log Out</a></li>
+			</ul>
+		</div>
+		<a class="nav-toggle hover-link" id="nav-toggle" th:href="@{/#}"> <i class="fa-solid fa-bars"></i> </a>
+	</div>
+</nav>
+
+<!-- sub-footer -->
+
+<div class="sub-footer" th:fragment="sub-footer">
+	<div class="container flex sub-footer-container">
+		<span class="footer" th:text="'&copy; 2025 ' + ${footerCompanyName}"></span>
+	</div>
+</div>
+
+</html>

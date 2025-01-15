@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+<main>
+	<section class="employees-section">
+		<div class="container">
+			<div class="body">
+				<h1>Authorities</h1>
+				<div>
+					<table>
+						<tr>
+							<th>Id</th>
+							<th>Authority</th>
+						</tr>
+						<tr th:each="authority : ${authorities}">
+							<td th:text="${authority.authorityId}"></td>
+							<td th:text="${authority.authority}"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+
+</body>
+</html>

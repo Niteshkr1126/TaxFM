@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<!-- main content -->
+
+<main>
+	
+	<!-- Customers Section -->
+	
+	<section class="customers-section">
+		<div class="container">
+			<div class="customers__table">
+				<section class="table__header">
+					<b><span>Customers</span></b>
+					<div class="input-group">
+						<input type="search" id="customerSearch" placeholder="Search Customer..." oninput="filterCustomers()"> <img th:src="@{/images/common/search.png}" alt="">
+					</div>
+					<div class="export__file">
+						<label for="export-file" class="export__file-btn" title="Export File"></label> <input type="checkbox" id="export-file">
+						<div class="export__file-options">
+							<label>Export As &nbsp; &#10140;</label> <label for="export-file" id="toPDF">PDF <img th:src="@{/images/common/pdf.png}" alt=""></label>
+							<label for="export-file" id="toCSV">CSV <img th:src="@{/images/common/csv.png}" alt=""></label> <label for="export-file" id="toEXCEL">EXCEL
+							<img th:src="@{/images/common/excel.png}" alt=""></label>
+						</div>
+					</div>
+					<a th:href="@{/customers/add}" class="create-link">Add New Customer</a>
+				</section>
+				<section class="customer__table__body">
+					<table>
+						<thead>
+						<tr>
+							<th>Username <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Firm Name <span class="icon-arrow">&UpArrow;</span></th>
+							<th>First Name <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Last Name <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Email <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Address <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Phone Number <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Action</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr th:each="customer : ${customers}">
+							<td><strong th:text="${customer.username}"></strong></td>
+							<td th:text="${customer.firmName}"></td>
+							<td th:text="${customer.firstName}"></td>
+							<td th:text="${customer.lastName}"></td>
+							<td th:text="${customer.email}"></td>
+							<td th:text="${customer.address}"></td>
+							<td th:text="${customer.phoneNumber}"></td>
+							<td class="action">
+								<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a> <a
+									th:href="@{/customers/{customerId}/edit(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a> <a
+									th:href="@{/customers/{customerId}/delete(customerId=${customer.customerId})}" onclick="return confirm('Are you sure?')"><img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt=""></a>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</section>
+			</div>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+<script>
+function filterCustomers() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("customerSearch");
+    table = document.querySelector(".customer__table__body table");
+    tr = table.getElementsByTagName("tr");
+    filter = input.value.toUpperCase();
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (var j = 0; j < td.length; j++) {
+            var cell = td[j];
+            if (cell) {
+                txtValue = cell.textContent || cell.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    break;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+}
+</script>
+</body>
+</html>

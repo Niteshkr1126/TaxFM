@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+<h2 class="error">Server error!</h2>
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

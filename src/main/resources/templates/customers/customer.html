@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<!-- main content -->
+
+<main>
+	
+	<!-- Customers Section -->
+	
+	<section class="customers-section">
+		<div class="container">
+			<a th:href="@{/customers}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
+			<h1>Customer Details</h1>
+			
+			<table border="1">
+				<tr>
+					<th>Username:</th>
+					<td th:text="${customer.username}"></td>
+				</tr>
+				<tr>
+					<th>Firm Name:</th>
+					<td th:text="${customer.firmName}"></td>
+				</tr>
+				<tr>
+					<th>First Name:</th>
+					<td th:text="${customer.firstName}"></td>
+				</tr>
+				<tr>
+					<th>Address:</th>
+					<td th:text="${customer.address}"></td>
+				</tr>
+				<tr>
+					<th>Phone Number:</th>
+					<td th:text="${customer.phoneNumber}"></td>
+				</tr>
+				<tr>
+					<th>Service Details:</th>
+					<td>
+						<div th:if="${customer.serviceDetails != null and not #lists.isEmpty(customer.serviceDetails)}">
+							<table border="1">
+								<thead>
+								<tr>
+									<th>Bank Name</th>
+									<th>Branch</th>
+									<th>IFSC Code</th>
+									<th>Account Number</th>
+									<th>Account Holder Name</th>
+									<th>Actions</th>
+								</tr>
+								</thead>
+								<tbody>
+<!--								<tr th:each="serviceDetail : ${customer.serviceDetails}">-->
+<!--									<td th:text="${serviceDetail.bankName}"></td>-->
+<!--									<td th:text="${serviceDetail.branch}"></td>-->
+<!--									<td th:text="${serviceDetail.ifscCode}"></td>-->
+<!--									<td th:text="${serviceDetail.accountNumber}"></td>-->
+<!--									<td th:text="${serviceDetail.accountHolderName}"></td>-->
+<!--									<td>-->
+<!--										<a th:href="@{'/serviceDetails/' + ${serviceDetail.serviceDetailId} + '/edit'}">Edit</a> <a-->
+<!--											th:href="@{'/serviceDetails/' + ${serviceDetail.serviceDetailId} + '/delete'}"-->
+<!--											onclick="return confirm('Are you sure you want to delete this service detail?')">Delete</a>-->
+<!--									</td>-->
+<!--								</tr>-->
+								</tbody>
+							</table>
+						</div>
+						<a th:href="@{/customers/{customerId}/addServiceDetails(customerId=${customer.customerId})}"
+						   class="add-service-detail">Add Service Detail</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+</body>
+</html>

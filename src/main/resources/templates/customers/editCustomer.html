@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<!-- main content -->
+
+<main>
+	
+	<!-- Customers Section -->
+	
+	<section class="customers-section">
+		<div class="container">
+			<a th:href="@{/customers}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
+			<h1>Edit Customer</h1>
+			<form th:action="@{/customers/{customer}/edit(customer=${customer.customerId})}" method="post" th:object="${customer}">
+				<input type="hidden" th:field="*{customerId}">
+				<label>Name:</label>
+				<input type="text" th:field="*{firmName}" required>
+				<label>Firm Name:</label>
+				<input type="text" th:field="*{firmName}" required>
+				<br>
+				<label>Address:</label>
+				<input type="text" th:field="*{address}" required> <br>
+				<label>Phone Number:</label> <input type="text" th:field="*{phoneNumber}" required> <br>
+				
+<!--				<div id="bankDetailsContainer">-->
+<!--					<div class="form-group">-->
+<!--						<p><label style="font-weight: bolder" for="addBankDetail">Bank Details</label></p>-->
+<!--						<button class="btn btn-info" th:align="right" th:nowrap="true" type="submit" name="addBankDetail" id="addBankDetail">Add Bank Detail</button>-->
+<!--					</div>-->
+<!--					<div th:if="*{bankDetails}">-->
+<!--						<table cellpadding="5px 15px;">-->
+<!--							<thead>-->
+<!--							<tr>-->
+<!--								<th></th>-->
+<!--								<th>Bank Name:</th>-->
+<!--								<th>Branch:</th>-->
+<!--								<th>IFSC Code:</th>-->
+<!--								<th>Account Number:</th>-->
+<!--								<th>Account Holder Name:</th>-->
+<!--								<th></th>-->
+<!--							</tr>-->
+<!--							</thead>-->
+<!--							<tbody>-->
+<!--							<tr th:each="bankDetail, stat: *{bankDetails}">-->
+<!--								<td th:text="${stat.count}"></td>-->
+<!--								<input type="hidden" th:field="*{bankDetails[__${stat.index}__].bankDetailId}">-->
+<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].bankName}"></td>-->
+<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].branch}"></td>-->
+<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].ifscCode}"></td>-->
+<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].accountNumber}"></td>-->
+<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].accountHolderName}"></td>-->
+<!--								<td>-->
+<!--									<button class="btn btn-info" type="submit" name="removeBankDetail" id="removeBankDetail" th:value="${stat.index}">Remove-->
+<!--									</button>-->
+<!--								</td>-->
+<!--							</tr>-->
+<!--							</tbody>-->
+<!--						</table>-->
+<!--					</div>-->
+<!--				</div>-->
+				<button type="submit">Update</button>
+			</form>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+</body>
+</html>

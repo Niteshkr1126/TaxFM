@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<!-- main content -->
+
+<main>
+	
+	<!-- Employees Section -->
+	
+	<section class="employees-section">
+		<div class="container">
+			<a th:href="@{/employees}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
+			<h2>Employee Details</h2>
+			<div class="employee-details">
+				<p><strong>Username:</strong> <span th:text="${employee.username}"></span></p>
+				<p><strong>First Name:</strong> <span th:text="${employee.firstName}"></span></p>
+				<p><strong>Last Name:</strong> <span th:text="${employee.lastName}"></span></p>
+				<p><strong>Email:</strong> <span th:text="${employee.email}"></span></p>
+				<p><strong>Phone Number:</strong> <span th:text="${employee.phoneNumber}"></span></p>
+				<p><strong>Authorities:</strong> <span th:text="${#strings.arrayJoin(employee.authorities.![authority], ', ')}"></span>
+				</p>
+				<p><strong>Account Non-Expired:</strong> <span th:text="${employee.accountNonExpired}"></span></p>
+				<p><strong>Account Non-Locked:</strong> <span th:text="${employee.accountNonLocked}"></span></p>
+				<p><strong>Credentials Non-Expired:</strong> <span th:text="${employee.credentialsNonExpired}"></span></p>
+				<p><strong>Enabled:</strong> <span th:text="${employee.enabled}"></span></p>
+			</div>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+</body>
+</html>

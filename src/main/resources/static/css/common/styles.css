@@ -1,0 +1,455 @@
+/* Style for Index Page */
+
+/* Style for header div */
+header {
+	padding: 10px 0;
+    background-color: #944547;
+    color: mistyrose;
+    max-height: 30px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Left header elements */
+.left-header {
+    display: flex; /* Allow left elements to be flex items */
+    align-items: center; /* Vertically center left elements */
+    padding: inherit;
+}
+
+/* Right header elements */
+.right-header {
+    display: flex; /* Allow right elements to be flex items */
+    align-items: center; /* Vertically center right elements */
+    padding: inherit;
+}
+
+/* Individual elements */
+.left-element {
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.right-element {
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Style for footer div */
+footer{
+    margin: 0px;
+    padding: 10px 0;
+    background-color: #944547;
+    color: mistyrose;
+    width: 100%;
+    height: 100%;
+    max-height: 18px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+/* Style for body */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center
+}
+
+.index-container {
+    padding: 80px 20px 20px; /* Adjust top padding to accommodate header and bottom padding for footer */
+    overflow-y: scroll; /* Enable vertical scrolling for content */
+    max-height: calc(100vh - 120px); /* Calculate maximum height based on viewport height minus header and footer heights */
+    width: 100%;
+    height: fit-content;
+}
+
+.index-container:empty {
+    display: none;
+}
+
+.login-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    margin-top: 200px;
+    align-items: center;
+    display: flex;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Style for form input fields */
+.form-control {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+/* Style for the submit button */
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.home-container {
+    display: flex;
+    padding-top: 48px;
+}
+
+.control-panel {
+    width: 15%;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.body-container {
+    width: 80%;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+/*---------------------------checked-----------------------*/
+/* Common styles */
+
+/*
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+*/
+/* Logo styles *//*
+
+.logo {
+    width: 100px;
+    height: auto;
+}
+
+*/
+/* Heading styles *//*
+
+h1 {
+    font-size: 36px;
+    color: mistyrose;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+*/
+/* Label styles *//*
+
+label {
+    font-weight: bold;
+    color: #555;
+}
+
+*/
+/* Error styles *//*
+
+.error {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.error, a.header {
+    color: red;
+}
+
+*/
+/* Table styles *//*
+
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+
+*/
+/* Header link styles *//*
+
+a.header {
+    padding: 5px;
+}
+
+*/
+/* Specific error style *//*
+
+.error {
+    color: #d9534f;
+}
+*/
+/*---------------------------*/
+/* Reset some default styles */
+body, h1, h2, table, form {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+h1, h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+    margin-right: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Confirmation message for delete action */
+.confirmation-message {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+/*Client style*/
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Form Styles */
+form {
+    width: 80%;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Table Styles */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+/* Bank Details Styles */
+.bank-detail {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f9f9f9;
+}
+
+.add-bank-detail {
+    display: block;
+    margin-top: 10px;
+    color: #007BFF;
+}
+
+.remove-bank-detail {
+    color: red;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/*home style*/
+/* Style for the container holding left and right panels */
+.container {
+  display: flex;
+}
+
+/* Style for the left panel with control links */
+.left-panel {
+  width: 200px;
+  background-color: #333; /* Set the background color */
+  color: white; /* Set text color */
+  padding: 20px;
+}
+
+/* Style for the control links */
+.left-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.left-panel ul li {
+  margin-bottom: 10px;
+}
+
+.left-panel a {
+  text-decoration: none;
+  color: white;
+}
+
+/* Style for the right panel with content */
+.right-panel {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Additional styles for content in the right panel */
+.right-panel p {
+  margin: 0;
+}
+
+.right-panel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.right-panel table th,
+.right-panel table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

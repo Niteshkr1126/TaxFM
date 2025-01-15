@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: head}"></head>
+
+<body>
+
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<main>
+	
+	<!-- Welcome section -->
+	
+	<section id="home" class="welcome-section">
+		<div class="container">
+			<div class="welcome-section">
+				<h1 class="highlight">Welcome to TaxFM</h1>
+				<p class="tagline">Your Trusted Partner for Seamless Tax & Financial Solutions</p>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Login section -->
+	
+	<section class="login-section">
+		<div class="container">
+			<!-- Login Content -->
+			<div class="screen">
+				<!-- Employee and Customer Login Tabs -->
+				<div class="tab-content active">
+					<div class="screen__content">
+						<div class="login-type">
+							<!-- Buttons for Tabs -->
+							<button class="tab-link active" onclick="openTab(event, 'employee-login')">Employee Login</button>
+							<button class="tab-link" onclick="openTab(event, 'customer-login')">Customer Login</button>
+						</div>
+						<!-- Employee Login Form (default displayed form) -->
+						<form id="employee-login" class="login active" method="post" th:action="@{/login}">
+							<p class="error" th:if="${loginError}" th:text="${loginErrorMessage} ? ${loginErrorMessage} : 'Wrong Username or Password'"></p>
+							<div class="login__field">
+								<i class="login__icon fas fa-user"></i>
+								<input type="text" class="login__input" placeholder="Username" name="username" autofocus="autofocus" required>
+							</div>
+							<div class="login__field">
+								<i class="login__icon fas fa-lock"></i>
+								<input type="password" class="login__input" placeholder="Password" name="password" required>
+							</div>
+							<button class="button login__submit">
+								<span class="button__text">Log In As Employee</span>
+								<i class="button__icon fas fa-chevron-right"></i>
+							</button>
+						</form>
+						<!-- Customer Login Form (hidden by default) -->
+						<form id="customer-login" class="login" method="post" th:action="@{/login}">
+							<p class="error" th:if="${loginError}" th:text="${loginErrorMessage} ? ${loginErrorMessage} : 'Wrong Username or Password'"></p>
+							<div class="login__field">
+								<i class="login__icon fas fa-user"></i>
+								<input type="text" class="login__input" placeholder="Username" name="username" autofocus="autofocus" required>
+							</div>
+							<div class="login__field">
+								<i class="login__icon fas fa-lock"></i>
+								<input type="password" class="login__input" placeholder="Password" name="password" required>
+							</div>
+							<button class="button login__submit">
+								<span class="button__text">Log In As Customer</span>
+								<i class="button__icon fas fa-chevron-right"></i>
+							</button>
+						</form>
+					</div>
+				</div>
+				
+				<!-- Background Shapes -->
+				<div class="screen__background">
+					<span class="screen__background__shape screen__background__shape4"></span>
+					<span class="screen__background__shape screen__background__shape3"></span>
+					<span class="screen__background__shape screen__background__shape2"></span>
+					<span class="screen__background__shape screen__background__shape1"></span>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- features section -->
+	
+	<section id="services" class="services-section">
+		<div class="container">
+			<div class="services-header">
+				<h2 class="services-heading-text">Explore our wide range of services designed to meet your financial needs</h2>
+				<a class="primary-button" th:href="@{/#}">See all services <i class="fa-solid fa-right-long"></i></a>
+			</div>
+			<div class="services-area flex">
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-customer-service.svg}">
+					<h3>Accounts</h3>
+					<p>Comprehensive accounting solutions to manage your finances efficiently.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-purchase-service.svg}">
+					<h3>Goods and Services Tax</h3>
+					<p>Seamless GST compliance and filing services.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-sale-service.svg}">
+					<h3>Income Tax</h3>
+					<p>Expert assistance with income tax planning and filing.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-stock-service.svg}">
+					<h3>Audit</h3>
+					<p>Professional auditing services for accurate financial reporting.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-expense-service.svg}">
+					<h3>TDS/TCS Filing</h3>
+					<p>Timely and precise TDS/TCS compliance and filing.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/generate-report-service.svg}">
+					<h3>MCA Filing</h3>
+					<p>Efficient management and filing with the Ministry of Corporate Affairs.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-customer-service.svg}">
+					<h3>Company Formation</h3>
+					<p>End-to-end assistance in setting up your company.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-purchase-service.svg}">
+					<h3>LIC</h3>
+					<p>Life insurance solutions tailored to your needs.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-sale-service.svg}">
+					<h3>Mutual Funds</h3>
+					<p>Smart investment options through mutual funds.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+				<div class="services-card flex">
+					<img alt="" th:src="@{/images/landing/manage-stock-service.svg}">
+					<h3>Insurance</h3>
+					<p>Comprehensive insurance services for security and peace of mind.</p>
+					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- big features section -->
+	
+	<section class="big-service-section">
+		<div class="container flex big-service-container">
+			<div class="service-img">
+				<img alt="" th:src="@{/images/landing/manage-customer-big-service.png}">
+			</div>
+			<div class="service-desc flex">
+				<h4>Effortless validation for</h4>
+				<h3>Design professionals</h3>
+				<p>Test interfaces, interaction flows, iconography and more, to help you create intuitive and delightful experiences for your employees.</p>
+			</div>
+		</div>
+	</section>
+	
+	<section class="big-service-section">
+		<div class="container flex big-service-container" id="second-big-feature">
+			<div class="service-img">
+				<img alt="" th:src="@{/images/landing/manage-purchases-big-service.png}">
+			</div>
+			<div class="service-desc flex">
+				<h4>Effortless validation for</h4>
+				<h3>Design professionals</h3>
+				<p>Test interfaces, interaction flows, iconography and more, to help you create intuitive and delightful experiences for your employees.</p>
+			</div>
+		</div>
+	</section>
+	
+	<section class="big-service-section">
+		<div class="container flex big-service-container">
+			<div class="service-img">
+				<img alt="" th:src="@{/images/landing/manage-sales-big-service.png}">
+			</div>
+			<div class="service-desc flex">
+				<h4>Effortless validation for</h4>
+				<h3>Design professionals</h3>
+				<p>Test interfaces, interaction flows, iconography and more, to help you create intuitive and delightful experiences for your employees.</p>
+			</div>
+		</div>
+	</section>
+	
+	<!--	About Us Section -->
+	<section id="about" class="about-us-section">
+		<div class="container flex about-us-section">
+			<div class="about-us-desc">
+				<h3>About Us</h3>
+				<p>
+					At <strong>TaxFM</strong>, we specialize in providing top-notch tax and finance management services.
+					With years of expertise in accounting, compliance, and financial advisory, our mission is to empower individuals
+					and businesses to achieve their financial goals.
+				</p>
+				<p>
+					Our team of dedicated professionals ensures personalized solutions for each client,
+					whether it's tax planning, audits, company formation, or investment strategies.
+					We pride ourselves on building lasting relationships based on trust, transparency, and results.
+				</p>
+				<p>
+					With a strong commitment to excellence, innovation, and customer satisfaction,
+					<strong>TaxFM</strong> is your reliable partner in navigating the complexities of finance and taxation.
+				</p>
+			</div>
+		</div>
+	</section>
+	
+	<!--	Our Team Section -->
+	<section id="team" class="team-section">
+		<div class="container flex team-section">
+			<div class="team-desc">
+				<h3>Our Team</h3>
+				<p>Meet our experts! Our experienced professionals are here to guide you every step of the way.</p>
+				<div class="team-members">
+					<div class="member">
+						<h3>John Doe</h3>
+						<p>Founder & CEO</p>
+					</div>
+					<div class="member">
+						<h3>Jane Smith</h3>
+						<p>Senior Tax Consultant</p>
+					</div>
+					<div class="member">
+						<h3>Emily Brown</h3>
+						<p>Financial Advisor</p>
+					</div>
+					<div class="member">
+						<h3>Emily Brown</h3>
+						<p>IT Support</p>
+					</div>
+					<div class="member">
+						<h3>Emily Brown</h3>
+						<p>IT Support</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!--	Career Section -->
+	<section id="career" class="career-section">
+		<div class="container flex career-section">
+			<div class="career-desc">
+				<h3>Careers</h3>
+				<p>Join our team and build a rewarding career in tax and finance management. We are always looking for talented individuals to grow with us.</p>
+				<a href="/careers" class="btn">Explore Open Positions</a>
+			</div>
+		</div>
+	</section>
+
+</main>
+
+<!-- footer -->
+
+<footer>
+	<!--	Contact Us Footer -->
+	<div id="contact" class="container flex contact-us-footer">
+		<div class="contact-section-desc">
+			<h3>Contact Us</h3>
+			<form action="/submit-contact" method="post" class="contact-form">
+				<input type="text" name="name" placeholder="Your Name" required>
+				<input type="email" name="email" placeholder="Your Email" required>
+				<textarea name="message" placeholder="Your Message" required></textarea>
+				<button type="submit" class="btn">Send Message</button>
+			</form>
+		</div>
+	</div>
+</footer>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+<script>
+    const activeTab = /*[[${activeTab}]]*/ 'employee-login';
+    localStorage.setItem('activeTab', activeTab);
+</script>
+<script th:src="@{/js/landing/index.js}"></script>
+</body>
+</html>

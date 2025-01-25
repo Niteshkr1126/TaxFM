@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 			xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/fragments :: head}"></head>
+<head th:replace="~{fragments/fragments :: common-head}"></head>
 
 <body>
 
@@ -93,68 +93,58 @@
 		<div class="container">
 			<div class="services-header">
 				<h2 class="services-heading-text">Explore our wide range of services designed to meet your financial needs</h2>
-				<a class="primary-button" th:href="@{/#}">See all services <i class="fa-solid fa-right-long"></i></a>
+				<a class="primary-button" th:href="@{/services}">See all service pricing <i class="fa-solid fa-right-long"></i></a>
 			</div>
 			<div class="services-area flex">
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-customer-service.svg}">
 					<h3>Accounts</h3>
 					<p>Comprehensive accounting solutions to manage your finances efficiently.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-purchase-service.svg}">
 					<h3>Goods and Services Tax</h3>
 					<p>Seamless GST compliance and filing services.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-sale-service.svg}">
 					<h3>Income Tax</h3>
 					<p>Expert assistance with income tax planning and filing.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-stock-service.svg}">
 					<h3>Audit</h3>
 					<p>Professional auditing services for accurate financial reporting.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-expense-service.svg}">
 					<h3>TDS/TCS Filing</h3>
 					<p>Timely and precise TDS/TCS compliance and filing.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/generate-report-service.svg}">
 					<h3>MCA Filing</h3>
 					<p>Efficient management and filing with the Ministry of Corporate Affairs.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-customer-service.svg}">
 					<h3>Company Formation</h3>
 					<p>End-to-end assistance in setting up your company.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-purchase-service.svg}">
 					<h3>LIC</h3>
 					<p>Life insurance solutions tailored to your needs.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-sale-service.svg}">
 					<h3>Mutual Funds</h3>
 					<p>Smart investment options through mutual funds.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 				<div class="services-card flex">
 					<img alt="" th:src="@{/images/landing/manage-stock-service.svg}">
 					<h3>Insurance</h3>
 					<p>Comprehensive insurance services for security and peace of mind.</p>
-					<a class="primary-button" th:href="@{/#}">Learn More <i class="fa-solid fa-right-long"></i></a>
 				</div>
 			</div>
 		</div>
@@ -262,7 +252,7 @@
 			<div class="career-desc">
 				<h3>Careers</h3>
 				<p>Join our team and build a rewarding career in tax and finance management. We are always looking for talented individuals to grow with us.</p>
-				<a href="/careers" class="btn">Explore Open Positions</a>
+				<a th:href="@{/career}" class="btn">Explore Open Positions</a>
 			</div>
 		</div>
 	</section>

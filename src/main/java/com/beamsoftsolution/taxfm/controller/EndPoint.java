@@ -7,4 +7,5 @@ public interface EndPoint {
 	String AUTHORITIES = "/authorities";
 	String CUSTOMERS = "/customers";
 	String PROFILE = "/profile";
+	String SERVICES = "/services";
 }

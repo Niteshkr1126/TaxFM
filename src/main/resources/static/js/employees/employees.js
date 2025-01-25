@@ -3,7 +3,7 @@ const search = document.querySelector('.input-group input'),
     table_headings = document.querySelectorAll('thead th');
 
 // 1. Searching for specific data of HTML table
-/*search.addEventListener('input', searchTable);
+search.addEventListener('input', searchTable);
 
 function searchTable() {
     table_rows.forEach((row, i) => {
@@ -17,7 +17,7 @@ function searchTable() {
     document.querySelectorAll('tbody tr:not(.hide)').forEach((visible_row, i) => {
         visible_row.style.backgroundColor = (i % 2 == 0) ? 'transparent' : '#0000000b';
     });
-}*/
+}
 
 // 2. Sorting | Ordering data of HTML table
 

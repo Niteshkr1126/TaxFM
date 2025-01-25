@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: services-head}"></head>
+<body>
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: services-nav-bar}"></nav>
+
+<!-- main content -->
+
+<main>
+	
+	<div class="container mt-5">
+		<h1 class="mb-4 text-center">Service Rates</h1>
+		<table class="table table-bordered table-striped table-hover">
+			<thead class="table-dark">
+			<tr>
+				<th>#</th>
+				<th>Service Type</th>
+				<th>Category</th>
+				<th>Turnover Range</th>
+				<th>Rate (₹)</th>
+				<th>GST (%)</th>
+				<th>Frequency</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="rate, iterStat : ${rates}">
+				<td th:text="${iterStat.index + 1}"></td>
+				<td th:text="${rate.serviceType}"></td>
+				<td th:text="${rate.category}"></td>
+				<td th:text="${rate.slabRange}"></td>
+				<td th:text="${rate.rate}"></td>
+				<td th:text="${rate.gstPercentage}"></td>
+				<td th:text="${rate.frequency}"></td>
+			</tr>
+			<tr th:if="${#lists.isEmpty(rates)}">
+				<td colspan="7" class="text-center">No service rates available.</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</main>
+</body>
+</html>

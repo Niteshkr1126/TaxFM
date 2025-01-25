@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -24,6 +25,7 @@ public class HomeController {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
 	@Autowired
 	private CustomerService customerService;
 	
@@ -35,7 +37,6 @@ public class HomeController {
 		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
 		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
 		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		System.out.println("Inside index");
 		return "landing/index";
 	}
 	
@@ -45,13 +46,11 @@ public class HomeController {
 		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
 		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
 		model.addAttribute("activeTab", tab);
-		System.out.println("Inside login get");
 		return "landing/index";
 	}
 	
 	@PostMapping("/login")
 	public String loginSuccessEmployee(Authentication authentication, RedirectAttributes redirectAttributes) {
-		System.out.println("Inside login post");
 		if(authentication != null) {
 			return "redirect:/home";
 		}
@@ -61,7 +60,6 @@ public class HomeController {
 	
 	@GetMapping("/login-error")
 	public String loginError(HttpServletRequest httpServletRequest, Model model) {
-		System.out.println("Inside login-error");
 		Object loginErrorMessage = httpServletRequest.getSession().getAttribute("loginErrorMessage");
 		if(loginErrorMessage != null) {
 			model.addAttribute("loginErrorMessage", loginErrorMessage.toString());
@@ -78,24 +76,37 @@ public class HomeController {
 		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
 		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
 		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		System.out.println("Inside home");
 		if(authentication != null && authentication.isAuthenticated()) {
 			String username = authentication.getName();
-			System.out.println(username);
 			Employee employee = employeeService.getLoggedInEmployee();
-			if (employee != null) {
+			if(employee != null) {
 				model.addAttribute("employee", employee);
-				System.out.println(employee);
 				return "home/employee-dashboard";
 			}
 			
 			Customer customer = customerService.getLoggedInCustomer();
-			if (customer != null) {
+			if(customer != null) {
 				model.addAttribute("customer", customer);
-				System.out.println(customer);
 				return "home/customer-dashboard";
 			}
 		}
 		return "redirect:/login";
+	}
+	
+	@GetMapping("/career")
+	public String careers(Model model) {
+		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
+		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		return "landing/career";
+	}
+	
+	@PostMapping("/submit-application")
+	public String submitApplication(@RequestParam("name") String name,
+			@RequestParam("email") String email,
+			@RequestParam("position") String position,
+			@RequestParam("resume") MultipartFile resume) {
+		log.info("Received application from: " + name);
+		return "redirect:/career?success";  // Redirect with a success query parameter
 	}
 }

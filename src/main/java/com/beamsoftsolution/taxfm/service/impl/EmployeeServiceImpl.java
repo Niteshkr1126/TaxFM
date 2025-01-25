@@ -21,13 +21,13 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	EmployeeRepository employeeRepository;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private CustomSessionManagementService customSessionManagementService;
+	CustomSessionManagementService customSessionManagementService;
 	
 	@Override
 	public List<Employee> getAllEmployees() {

@@ -15,9 +15,11 @@ public class Authority {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer authorityId;
+	
 	@NonNull
 	@Column(unique = true)
 	private String authority;
+	
 	public String toString() {
 		return new Gson().toJson(this);
 	}

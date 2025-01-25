@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 			xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/fragments :: head}"></head>
+<head th:replace="~{fragments/fragments :: profile-head}"></head>
 
 <body>
 
@@ -19,23 +19,360 @@
 <main>
 	
 	<!-- Employees Section -->
-	
-	<section class="employees-section">
+	<section class="employee-section">
 		<div class="container">
-			<a th:href="@{/employees}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
-			<h2>Employee Details</h2>
-			<div class="employee-details">
-				<p><strong>Username:</strong> <span th:text="${employee.username}"></span></p>
-				<p><strong>First Name:</strong> <span th:text="${employee.firstName}"></span></p>
-				<p><strong>Last Name:</strong> <span th:text="${employee.lastName}"></span></p>
-				<p><strong>Email:</strong> <span th:text="${employee.email}"></span></p>
-				<p><strong>Phone Number:</strong> <span th:text="${employee.phoneNumber}"></span></p>
-				<p><strong>Authorities:</strong> <span th:text="${#strings.arrayJoin(employee.authorities.![authority], ', ')}"></span>
-				</p>
-				<p><strong>Account Non-Expired:</strong> <span th:text="${employee.accountNonExpired}"></span></p>
-				<p><strong>Account Non-Locked:</strong> <span th:text="${employee.accountNonLocked}"></span></p>
-				<p><strong>Credentials Non-Expired:</strong> <span th:text="${employee.credentialsNonExpired}"></span></p>
-				<p><strong>Enabled:</strong> <span th:text="${employee.enabled}"></span></p>
+			<div class="row gutters-sm">
+				<div class="col-md-4 mb-3">
+					<div class="card">
+						<div class="card-body">
+							<div class="d-flex flex-column align-items-center text-center">
+								<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+								<div class="mt-3">
+									<h4><span class="value" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></span></h4>
+									<p class="text-secondary mb-1"><span th:text="${employee.designation}"></span></p>
+									<p class="text-muted font-size-sm"><span th:text="${employee.address}"></span></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card mt-3">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+								<h6 class="mb-0"><i class="fas fa-globe mr-2"></i>Website</h6>
+								<span class="text-secondary">https://bootdey.com</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+								<h6 class="mb-0"><i class="fab fa-github mr-2"></i>Github</h6>
+								<span class="text-secondary">bootdey</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+								<h6 class="mb-0"><i class="fab fa-twitter text-info mr-2"></i>Twitter</h6>
+								<span class="text-secondary">@bootdey</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+								<h6 class="mb-0"><i class="fab fa-instagram text-danger mr-2"></i>Instagram</h6>
+								<span class="text-secondary">bootdey</span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+								<h6 class="mb-0"><i class="fab fa-facebook text-primary mr-2"></i>Facebook</h6>
+								<span class="text-secondary">bootdey</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Username</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.username}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Email</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.email}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Date of Birth</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.dob}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Gender</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.gender}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Phone Number</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.phoneNumber}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Marital Status</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.maritalStatus}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">PAN</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.pan}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Aadhar Number</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.aadharCardNumber}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Agreement</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${employee.agreement}"></span>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-sm-3">
+									<h6 class="mb-0">Authorities</h6>
+								</div>
+								<div class="col-sm-9 text-secondary">
+									<span class="value" th:text="${#strings.arrayJoin(employee.authorities.![authority], ', ')}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row gutters-sm">
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<div class="card h-100">
+								<div class="card-body">
+									<h6 class="d-flex align-items-center mb-3"><i class="fas fa-tasks text-info mr-2"></i>Project Status</h6>
+									<small>Web Design</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Website Markup</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>One Page</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Mobile Template</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<small>Backend API</small>
+									<div class="progress mb-3" style="height: 5px">
+										<div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>

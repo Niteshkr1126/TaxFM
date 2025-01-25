@@ -45,6 +45,8 @@ public class SecurityConfig {
 			
 			                   authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
 			
+			                   authConfig.requestMatchers(HttpMethod.GET, "/services/**", "/career/**").permitAll();
+			
 			                   authConfig.requestMatchers(HttpMethod.GET, "/", "/login", "/login-error", "/error", "/logout").permitAll();
 			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/employee-login", "customer-login", "/login-error", "/error", "/logout").permitAll();
 			

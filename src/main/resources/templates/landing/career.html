@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/fragments :: services-head}"></head> <!-- Include head fragment -->
+<body>
+
+<!-- top banner -->
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+<nav th:replace="~{fragments/fragments :: services-nav-bar}"></nav>
+
+<main>
+	<!-- Career Section -->
+	<div id="career" class="container mt-5">
+		<h2>Current Job Openings</h2>
+		<div class="row">
+			<!-- Senior Accountant -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Senior Accountant</h5>
+						<p class="card-text">We are looking for an experienced Senior Accountant to join our team. Expertise in financial reporting, tax filing, and compliance is required.</p>
+						<a href="#apply" class="btn btn-primary">Apply Now</a>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Junior Accountant -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Junior Accountant</h5>
+						<p class="card-text">Seeking a Junior Accountant to assist with daily financial operations. A basic understanding of accounting principles and Tally is preferred.</p>
+						<a href="#apply" class="btn btn-primary">Apply Now</a>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Tally Specialist -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Tally Specialist</h5>
+						<p class="card-text">Looking for a Tally Specialist who has in-depth knowledge of Tally ERP and can assist in data entry, reports, and financial statements.</p>
+						<a href="#apply" class="btn btn-primary">Apply Now</a>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Account Assistant -->
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Account Assistant</h5>
+						<p class="card-text">We are hiring an Account Assistant to support our accounting department. Responsibilities include record keeping and financial data entry.</p>
+						<a href="#apply" class="btn btn-primary">Apply Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+		
+		<!-- Job Application Form -->
+		<div id="apply" class="mt-5">
+			<h3>Apply for a Job</h3>
+			<form th:action="@{/submit-application}" method="POST">
+				<div class="form-group">
+					<label for="name">Full Name</label>
+					<input type="text" id="name" name="name" class="form-control" required>
+				</div>
+				
+				<div class="form-group">
+					<label for="email">Email Address</label>
+					<input type="email" id="email" name="email" class="form-control" required>
+				</div>
+				
+				<div class="form-group">
+					<label for="position">Position Applied For</label>
+					<select id="position" name="position" class="form-control" required>
+						<option value="Senior Accountant">Senior Accountant</option>
+						<option value="Junior Accountant">Junior Accountant</option>
+						<option value="Tally Specialist">Tally Specialist</option>
+						<option value="Account Assistant">Account Assistant</option>
+					</select>
+				</div>
+				
+				<div class="form-group">
+					<label for="resume">Upload Resume</label>
+					<input type="file" id="resume" name="resume" class="form-control" required>
+				</div>
+				
+				<button type="submit" class="btn btn-success">Submit Application</button>
+			</form>
+		</div>
+	</div>
+</main>
+<!-- sub-footer -->
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

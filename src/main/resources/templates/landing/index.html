@@ -38,11 +38,12 @@
 					<div class="screen__content">
 						<div class="login-type">
 							<!-- Buttons for Tabs -->
-							<button class="tab-link active" onclick="openTab(event, 'employee-login')">Employee Login</button>
-							<button class="tab-link" onclick="openTab(event, 'customer-login')">Customer Login</button>
+							<button class="tab-link" th:classappend="${activeTab == 'employee-login'} ? 'active'" onclick="openTab(event, 'employee-login')">Employee Login</button>
+							<button class="tab-link" th:classappend="${activeTab == 'customer-login'} ? 'active'" onclick="openTab(event, 'customer-login')">Customer Login</button>
 						</div>
 						<!-- Employee Login Form (default displayed form) -->
-						<form id="employee-login" class="login active" method="post" th:action="@{/login}">
+						<form id="employee-login" class="login" th:classappend="${activeTab == 'employee-login'} ? 'active'" method="post" th:action="@{/login}">
+							<input type="hidden" name="loginType" value="employee">
 							<p class="error" th:if="${loginError}" th:text="${loginErrorMessage} ? ${loginErrorMessage} : 'Wrong Username or Password'"></p>
 							<div class="login__field">
 								<i class="login__icon fas fa-user"></i>
@@ -58,7 +59,8 @@
 							</button>
 						</form>
 						<!-- Customer Login Form (hidden by default) -->
-						<form id="customer-login" class="login" method="post" th:action="@{/login}">
+						<form id="customer-login" class="login" th:classappend="${activeTab == 'customer-login'} ? 'active'" method="post" th:action="@{/login}">
+							<input type="hidden" name="loginType" value="customer">
 							<p class="error" th:if="${loginError}" th:text="${loginErrorMessage} ? ${loginErrorMessage} : 'Wrong Username or Password'"></p>
 							<div class="login__field">
 								<i class="login__icon fas fa-user"></i>
@@ -279,10 +281,6 @@
 <!-- sub-footer -->
 
 <div th:replace="~{fragments/fragments :: sub-footer}"></div>
-<script>
-    const activeTab = /*[[${activeTab}]]*/ 'employee-login';
-    localStorage.setItem('activeTab', activeTab);
-</script>
 <script th:src="@{/js/landing/index.js}"></script>
 </body>
 </html>

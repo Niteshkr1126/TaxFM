@@ -35,6 +35,9 @@ public class SecurityConfig {
 	CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 	
 	@Autowired
+	CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	
+	@Autowired
 	SecurityUserDetailsService securityUserDetailsService;
 	
 	// Authorization
@@ -48,7 +51,7 @@ public class SecurityConfig {
 			                   authConfig.requestMatchers(HttpMethod.GET, "/services/**", "/career/**").permitAll();
 			
 			                   authConfig.requestMatchers(HttpMethod.GET, "/", "/login", "/login-error", "/error", "/logout").permitAll();
-			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/employee-login", "customer-login", "/login-error", "/error", "/logout").permitAll();
+			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/employee-login", "/customer-login", "/login-error", "/error", "/logout").permitAll();
 			
 			                   authConfig.requestMatchers(HttpMethod.GET, "/home").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
 			
@@ -63,9 +66,8 @@ public class SecurityConfig {
 			                   authConfig.anyRequest().authenticated();
 		                   })
 		                   .formLogin(login -> {
-			                   // Employee Login Configuration
 			                   login.loginPage("/login");
-			                   login.defaultSuccessUrl("/home");
+			                   login.successHandler(customAuthenticationSuccessHandler);
 			                   login.failureUrl("/login-error");
 			                   login.failureHandler(customAuthenticationFailureHandler);
 		                   })

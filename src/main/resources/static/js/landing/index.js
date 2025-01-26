@@ -7,32 +7,14 @@ const loadFontAwesome = () => {
 };
 
 // Tab switching functionality
-function openTab(event, formId) {
-    event.preventDefault(); // Prevent default behavior
+function openTab(event, tabId) {
+    event.preventDefault();
+    document.querySelectorAll('.tab-link').forEach(button => button.classList.remove('active'));
+    document.querySelectorAll('.login').forEach(form => form.classList.remove('active'));
 
-    // Hide all login forms
-    const loginForms = document.querySelectorAll('.login');
-    loginForms.forEach(form => form.classList.remove('active'));
-
-    // Show the selected form
-    const selectedForm = document.getElementById(formId);
-    selectedForm.classList.add('active');
-
-    // Highlight the active tab button
-    const tabLinks = document.querySelectorAll('.tab-link');
-    tabLinks.forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
 }
-
-// On page load, set the active tab from localStorage or default to employee-login
-document.addEventListener('DOMContentLoaded', () => {
-    const activeTab = localStorage.getItem('activeTab') || 'employee-login';
-    const activeButton = document.querySelector(`.tab-link[onclick*="${activeTab}"]`);
-    if (activeButton) {
-        activeButton.click();
-    }
-});
-
 
 // Smooth scrolling functionality
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

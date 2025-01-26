@@ -2,7 +2,6 @@ package com.beamsoftsolution.taxfm.service.impl;
 
 import com.beamsoftsolution.taxfm.exception.TaxFMException;
 import com.beamsoftsolution.taxfm.model.Customer;
-import com.beamsoftsolution.taxfm.model.ServiceDetail;
 import com.beamsoftsolution.taxfm.repository.CustomerRepository;
 import com.beamsoftsolution.taxfm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,49 +45,49 @@ public class CustomerServiceImpl implements CustomerService {
 		return null;
 	}
 	
-//	@Override
-//	public void updateCustomer(Customer customer) throws TaxFMException {
-//		Customer existingCustomer = getCustomerById(customer.getCustomerId());
-//		existingCustomer.setCustomerName(customer.getCustomerName());
-//		existingCustomer.setFirmName(customer.getFirmName());
-//		existingCustomer.setAddress(customer.getAddress());
-//		existingCustomer.setEmail(customer.getEmail());
-//		existingCustomer.setPhoneNumber(customer.getPhoneNumber());
-//		existingCustomer.setPan(customer.getPan());
-//		existingCustomer.setAadharCardNumber(customer.getAadharCardNumber());
-//		existingCustomer.setGstNumber(customer.getGstNumber());
-//		// Ensure that the bank details are retained
-//		List<ServiceDetail> updatedServiceDetails = customer.getServiceDetails();
-//		if(updatedServiceDetails != null) {
-//			for(ServiceDetail updatedServiceDetail : updatedServiceDetails) {
-//				ServiceDetail existingServiceDetail = existingCustomer.getServiceDetails()
-//				                                             .stream()
-//				                                             .filter(b -> b.getBankDetailId().equals(updatedBankDetail.getBankDetailId()))
-//				                                             .findFirst()
-//				                                             .orElse(null);
-//
-//				if(existingServiceDetail != null) {
-//					// Update bank detail fields
-//					existingServiceDetail.setBankName(updatedServiceDetail.getBankName());
-//					existingServiceDetail.setBranch(updatedServiceDetail.getBranch());
-//					existingServiceDetail.setIfscCode(updatedServiceDetail.getIfscCode());
-//					existingServiceDetail.setAccountNumber(updatedServiceDetail.getAccountNumber());
-//					existingServiceDetail.setAccountHolderName(updatedServiceDetail.getAccountHolderName());
-//				}
-//			}
-//		}
-//		customerRepository.save(existingCustomer);
-//	}
+	//	@Override
+	//	public void updateCustomer(Customer customer) throws TaxFMException {
+	//		Customer existingCustomer = getCustomerById(customer.getCustomerId());
+	//		existingCustomer.setCustomerName(customer.getCustomerName());
+	//		existingCustomer.setFirmName(customer.getFirmName());
+	//		existingCustomer.setAddress(customer.getAddress());
+	//		existingCustomer.setEmail(customer.getEmail());
+	//		existingCustomer.setPhoneNumber(customer.getPhoneNumber());
+	//		existingCustomer.setPan(customer.getPan());
+	//		existingCustomer.setAadharCardNumber(customer.getAadharCardNumber());
+	//		existingCustomer.setGstNumber(customer.getGstNumber());
+	//		// Ensure that the bank details are retained
+	//		List<ServiceDetail> updatedServiceDetails = customer.getServiceDetails();
+	//		if(updatedServiceDetails != null) {
+	//			for(ServiceDetail updatedServiceDetail : updatedServiceDetails) {
+	//				ServiceDetail existingServiceDetail = existingCustomer.getServiceDetails()
+	//				                                             .stream()
+	//				                                             .filter(b -> b.getBankDetailId().equals(updatedBankDetail.getBankDetailId()))
+	//				                                             .findFirst()
+	//				                                             .orElse(null);
+	//
+	//				if(existingServiceDetail != null) {
+	//					// Update bank detail fields
+	//					existingServiceDetail.setBankName(updatedServiceDetail.getBankName());
+	//					existingServiceDetail.setBranch(updatedServiceDetail.getBranch());
+	//					existingServiceDetail.setIfscCode(updatedServiceDetail.getIfscCode());
+	//					existingServiceDetail.setAccountNumber(updatedServiceDetail.getAccountNumber());
+	//					existingServiceDetail.setAccountHolderName(updatedServiceDetail.getAccountHolderName());
+	//				}
+	//			}
+	//		}
+	//		customerRepository.save(existingCustomer);
+	//	}
 	
 	@Override
 	public void deleteCustomerById(Integer customerId) {
 		customerRepository.deleteById(customerId);
 	}
 	
-//	@Override
-//	public void addServiceDetail(Integer customerId, ServiceDetail serviceDetail) throws TaxFMException {
-//		Customer customer = getCustomerById(customerId);
-//		customer.getServiceDetails().add(serviceDetail);
-//		customerRepository.save(customer);
-//	}
+	//	@Override
+	//	public void addServiceDetail(Integer customerId, ServiceDetail serviceDetail) throws TaxFMException {
+	//		Customer customer = getCustomerById(customerId);
+	//		customer.getServiceDetails().add(serviceDetail);
+	//		customerRepository.save(customer);
+	//	}
 }

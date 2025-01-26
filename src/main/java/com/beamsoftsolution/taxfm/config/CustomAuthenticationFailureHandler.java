@@ -17,6 +17,13 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+		String loginType = request.getParameter("loginType");  // Get loginType from the form submission (e.g., "employee" or "customer")
+		
+		// You can also retrieve the login type from the roles or authorities of the user if necessary
+		if(loginType == null) {
+			loginType = "employee"; // Default to employee if not specified
+		}
+		request.getSession().setAttribute("loginType", loginType);
 		log.info("Exception: " + exception);
 		if(exception instanceof UsernameNotFoundException) {
 			String loginErrorMessage = exception.getMessage();

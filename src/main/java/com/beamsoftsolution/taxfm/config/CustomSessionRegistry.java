@@ -1,16 +1,20 @@
 package com.beamsoftsolution.taxfm.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class CustomSessionRegistry extends SessionRegistryImpl {
-
+	
 	@Override
 	public void registerNewSession(String sessionId, Object principal) {
-		log.info(principal.toString());
+		// Custom logic for new session registration
 		super.registerNewSession(sessionId, principal);
+	}
+	
+	@Override
+	public void removeSessionInformation(String sessionId) {
+		// Custom logic for session removal
+		super.removeSessionInformation(sessionId);
 	}
 }

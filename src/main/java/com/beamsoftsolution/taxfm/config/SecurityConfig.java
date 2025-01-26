@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,8 +78,15 @@ public class SecurityConfig {
 			                   logout.deleteCookies("JSESSIONID");
 			                   logout.invalidateHttpSession(true);
 		                   })
-		                   .sessionManagement((sessionManagement) -> sessionManagement.sessionConcurrency((sessionConcurrency) ->
-				                                                                                                  sessionConcurrency.maximumSessions(1).expiredUrl("/login")))
+		                   .sessionManagement(sessionManagement ->
+				                                      sessionManagement
+						                                      .maximumSessions(1)  // Limit to 1 session per user
+						                                      .expiredUrl("/login?expired=true")  // Redirect to this URL when session expires
+						                                      .sessionRegistry(sessionRegistry()) // Session registry for concurrent session management
+						                                      .and()
+						                                      .sessionFixation(
+								                                      SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)// Protect against session fixation attacks
+						                                      .invalidSessionUrl("/login?invalid=true"))
 		                   .httpBasic(Customizer.withDefaults()).build();
 	}
 	
@@ -143,5 +151,4 @@ public class SecurityConfig {
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 		return new HttpSessionEventPublisher();
 	}
-	
 }

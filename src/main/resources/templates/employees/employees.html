@@ -99,33 +99,6 @@
 <!-- sub-footer -->
 
 <div th:replace="~{fragments/fragments :: sub-footer}"></div>
-<script>
-function filterUsers() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("userSearch");
-    table = document.querySelector(".table__body table");
-    tr = table.getElementsByTagName("tr");
-    filter = input.value.toUpperCase();
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td");
-        for (var j = 0; j < td.length; j++) {
-            var cell = td[j];
-            if (cell) {
-                txtValue = cell.textContent || cell.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    break;
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-}
-
-
-
-
-</script>
+<script th:src="@{/js/employees/employees.js}"></script>
 </body>
 </html>

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(EndPoint.SERVICES)
-public class ServiceRateController {
+@RequestMapping(EndPoint.PRICING)
+public class PricingController {
 	
 	@Autowired
 	private ServiceRateService serviceRateService;
@@ -27,7 +27,7 @@ public class ServiceRateController {
 		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
 		List<ServiceRate> rates = serviceRateService.getAllServiceRates();
 		model.addAttribute("rates", rates);
-		return "landing/service-rates";
+		return "landing/pricing";
 	}
 	
 	@GetMapping("/type/{serviceType}")

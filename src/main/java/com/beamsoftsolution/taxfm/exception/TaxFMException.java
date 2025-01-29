@@ -16,10 +16,15 @@ public class TaxFMException extends Exception {
 	
 	@Serial
 	private static final long serialVersionUID = 3236478736863223453L;
+	
 	private static MessageSource messageSource = null;
+	
 	private static Locale currentLocale = LocaleContextHolder.getLocale();
+	
 	private String messageKey = null;
+	
 	private Object[] args = null;
+	
 	private int errorCode = 0;
 	
 	public TaxFMException() {

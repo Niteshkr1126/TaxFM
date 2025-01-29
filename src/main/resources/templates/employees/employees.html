@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
 			xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/fragments :: common-head}"></head>
@@ -36,7 +37,7 @@
 							<img th:src="@{/images/common/excel.png}" alt=""></label>
 						</div>
 					</div>
-					<a th:if="${showNewEmployeeAddition}" th:href="@{/employees/add}" class="create-link">Add New Employee</a>
+					<a th:if="${showNewEmployeeAddition}" sec:authorize="hasAuthority('ADMIN')" th:href="@{/employees/add}" class="create-link">Add New Employee</a>
 				</section>
 				<section class="table__body">
 					<table>
@@ -59,10 +60,10 @@
 							<td th:text="${employee.phoneNumber}"></td>
 							<td th:text="${#strings.arrayJoin(employee.authorities.![authority], ', ')}"></td>
 							<td class="action">
-								<a th:href="@{/employees/{id}(id=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/view.png}" alt=""></a>
-								<a th:href="@{/employees/{id}/edit(id=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/edit.png}" alt=""></a>
-								<a th:if="${employee.employeeId != loggedInEmployeeId}" th:href="@{/employees/{id}/delete(id=${employee.employeeId})}" onclick="return confirm('Are you sure?')">
-									<img class="action-icon-delete" th:src="@{/images/common/delete.png}" alt="">
+								<a th:href="@{/employees/{employeeId}(employeeId=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/employees/{id}/edit(id=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('ADMIN')" th:if="${employee.employeeId != loggedInEmployeeId}" th:href="@{/employees/{id}/delete(id=${employee.employeeId})}" onclick="return confirm('Are you sure?')">
+									<img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt="">
 								</a>
 							</td>
 						</tr>

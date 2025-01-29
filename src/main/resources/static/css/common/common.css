@@ -199,3 +199,40 @@ footer {
     gap: 30px;
     flex-wrap: wrap;
 }
+
+.access-denied-container {
+     height: 70vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+.error-icon {
+      font-size: 5rem;
+      color: #dc3545;
+      margin-bottom: 1rem;
+}
+
+/* Error Pages Styling */
+.error-container {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-card {
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.error-icon.access-denied {
+    color: #dc3545;
+}
+
+.error-icon.server-error {
+    color: #ffc107;
+}
+
+.error-message {
+    margin-bottom: 1.5rem;
+}

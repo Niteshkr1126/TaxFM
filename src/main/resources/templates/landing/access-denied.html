@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/fragments :: access-denied-head}"></head>
+
+<body>
+
+<!-- top banner -->
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<main>
+	<section class="access-denied-section">
+		<div class="access-denied-container">
+			<div class="card shadow-lg p-4" style="max-width: 600px;">
+				<div class="card-body text-center">
+					<!-- Error Icon -->
+					<div class="error-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-shield-lock-fill" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+										d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m0 5a1.5 1.5 0 0 1 .5 2.915l.5 1.947a.5.5 0 1 1-.97.242l-.465-1.889A1.5 1.5 0 0 1 8 5M3.75 8A.25.25 0 0 1 4 7.75h2.5a.25.25 0 0 1 .25.25v2.5a.25.25 0 0 1-.25.25H4a.25.25 0 0 1-.25-.25z"/>
+						</svg>
+					</div>
+					
+					<!-- Error Message -->
+					<h1 class="h2 mb-3 text-danger">403 - Access Denied</h1>
+					<p class="lead mb-4">
+						You don't have permission to view this page.
+					</p>
+					<p class="text-muted">
+						Please contact your administrator if you believe this is an error.
+					</p>
+					
+					<!-- Return Home Button -->
+					<a th:href="@{/}" class="btn btn-primary mt-3">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door me-2" viewBox="0 0 16 16">
+							<path
+									d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z"/>
+						</svg>
+						Return to Home Page
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -99,7 +99,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 				customer.getAuthorities().forEach(authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
 				
 				return new SecurityUser(customer.getUsername(), customer.getPassword(), true, true, true, true, grantedAuthorities,
-				                            customer.getFirstName(), customer.getLastName(), customer.getEmail());
+				                        customer.getFirstName(), customer.getLastName(), customer.getEmail());
 			}
 			
 			log.error("Could not find employee or customer with username: {}", username);

@@ -23,55 +23,74 @@
 	<section class="customers-section">
 		<div class="container">
 			<a th:href="@{/customers}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
-			<h1>Edit Customer</h1>
-			<form th:action="@{/customers/{customer}/edit(customer=${customer.customerId})}" method="post" th:object="${customer}">
-				<input type="hidden" th:field="*{customerId}">
-				<label>Name:</label>
-				<input type="text" th:field="*{firmName}" required>
-				<label>Firm Name:</label>
-				<input type="text" th:field="*{firmName}" required>
-				<br>
-				<label>Address:</label>
-				<input type="text" th:field="*{address}" required> <br>
-				<label>Phone Number:</label> <input type="text" th:field="*{phoneNumber}" required> <br>
-				
-<!--				<div id="bankDetailsContainer">-->
-<!--					<div class="form-group">-->
-<!--						<p><label style="font-weight: bolder" for="addBankDetail">Bank Details</label></p>-->
-<!--						<button class="btn btn-info" th:align="right" th:nowrap="true" type="submit" name="addBankDetail" id="addBankDetail">Add Bank Detail</button>-->
-<!--					</div>-->
-<!--					<div th:if="*{bankDetails}">-->
-<!--						<table cellpadding="5px 15px;">-->
-<!--							<thead>-->
-<!--							<tr>-->
-<!--								<th></th>-->
-<!--								<th>Bank Name:</th>-->
-<!--								<th>Branch:</th>-->
-<!--								<th>IFSC Code:</th>-->
-<!--								<th>Account Number:</th>-->
-<!--								<th>Account Holder Name:</th>-->
-<!--								<th></th>-->
-<!--							</tr>-->
-<!--							</thead>-->
-<!--							<tbody>-->
-<!--							<tr th:each="bankDetail, stat: *{bankDetails}">-->
-<!--								<td th:text="${stat.count}"></td>-->
-<!--								<input type="hidden" th:field="*{bankDetails[__${stat.index}__].bankDetailId}">-->
-<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].bankName}"></td>-->
-<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].branch}"></td>-->
-<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].ifscCode}"></td>-->
-<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].accountNumber}"></td>-->
-<!--								<td><input type="text" class="form-control" th:field="*{bankDetails[__${stat.index}__].accountHolderName}"></td>-->
-<!--								<td>-->
-<!--									<button class="btn btn-info" type="submit" name="removeBankDetail" id="removeBankDetail" th:value="${stat.index}">Remove-->
-<!--									</button>-->
-<!--								</td>-->
-<!--							</tr>-->
-<!--							</tbody>-->
-<!--						</table>-->
-<!--					</div>-->
-<!--				</div>-->
-				<button type="submit">Update</button>
+			<h2>Edit Customer</h2>
+			<form th:action="@{/customers/{id}/edit(id=${customer.customerId})}" method="post" th:object="${customer}">
+				<input type="hidden" th:field="*{customerId}"/>
+				<div class="form-group">
+					<label for="username">Username:</label><br> <input class="form-control" id="username" name="username" placeholder="Username"
+																														 required="required"
+																														 th:field="*{username}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="firstName">First Name:</label><br> <input class="form-control" id="firstName" name="firstName" placeholder="First Name"
+																																oninput="this.value = this.value.toUpperCase()"
+																																required="required"
+																																th:field="*{firstName}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="lastName">Last Name:</label><br> <input class="form-control" id="lastName" name="lastName" placeholder="Last Name"
+																															oninput="this.value = this.value.toUpperCase()"
+																															required="required"
+																															th:field="*{lastName}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="firmName">Firm Name:</label><br> <input class="form-control" id="firmName" name="firmName" placeholder="Firm Name"
+																															oninput="this.value = this.value.toUpperCase()"
+																															required="required"
+																															th:field="*{firmName}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label><br> <input class="form-control" id="email" name="email" placeholder="Email"
+																											 oninput="this.value = this.value.toUpperCase()"
+																											 required="required"
+																											 th:field="*{email}" type="email"/>
+				</div>
+				<div class="form-group">
+					<label for="phoneNumber">Phone Number:</label><br> <input class="form-control" id="phoneNumber" name="phoneNumber"
+																																		placeholder="Phone Number"
+																																		required="required"
+																																		th:field="*{phoneNumber}" type="tel"/>
+				</div>
+				<div class="form-group">
+					<label for="pan">PAN:</label><br> <input class="form-control" id="pan" name="pan"
+																									 oninput="this.value = this.value.toUpperCase()"
+																									 placeholder="PAN"
+																									 required="required"
+																									 maxlength="10"
+																									 th:field="*{pan}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="aadharCardNumber">Aadhar Card Number:</label><br> <input class="form-control" id="aadharCardNumber" name="aadharCardNumber"
+																																							 placeholder="Aadhar Card Number"
+																																							 required="required"
+																																							 maxlength="12"
+																																							 th:field="*{aadharCardNumber}" type="number"/>
+				</div>
+				<div class="form-group">
+					<label for="gstNumber">GST Number:</label><br> <input class="form-control" id="gstNumber" name="gstNumber"
+																																oninput="this.value = this.value.toUpperCase()"
+																																placeholder="GST Number"
+																																required="required"
+																																th:field="*{gstNumber}" type="text"/>
+				</div>
+				<div class="form-group">
+					<label for="address">Address:</label><br> <input class="form-control" id="address" name="address"
+																													 oninput="this.value = this.value.toUpperCase()"
+																													 placeholder="Address"
+																													 required="required"
+																													 th:field="*{address}" type="text"/>
+				</div>
+				<button class="btn btn-primary" type="submit">Save Changes</button>
 			</form>
 		</div>
 	</section>

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -65,13 +66,30 @@ public class Employee {
 			@JoinColumn(name = "authorityId", referencedColumnName = "authorityId") })
 	private List<Authority> authorities;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 			name = "employees_customers",
 			joinColumns = { @JoinColumn(name = "employeeId", referencedColumnName = "employeeId") },
-			inverseJoinColumns = { @JoinColumn(name = "customerId", referencedColumnName = "customerId") }
+			inverseJoinColumns = { @JoinColumn(name = "customerId", referencedColumnName = "customerId") },
+			uniqueConstraints = { @UniqueConstraint(columnNames = { "employeeId", "customerId" }) }
 	)
 	private List<Customer> assignedCustomers;
+	
+	// Owning side (foreign key in DB)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "supervisor_id")
+	@JsonIgnore
+	private Employee supervisor;
+	
+	// Inverse side (no DB column)
+	@OneToMany(mappedBy = "supervisor", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@Builder.Default
+	private List<Employee> subordinates = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	private transient List<Attendance> attendanceRecords;
 	
 	@Builder.Default
 	private Boolean accountNonExpired = true;

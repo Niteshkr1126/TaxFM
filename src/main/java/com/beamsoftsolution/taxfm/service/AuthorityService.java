@@ -8,6 +8,7 @@ import java.util.List;
 public interface AuthorityService {
 	
 	Authority getAuthorityById(Integer id) throws TaxFMException;
+	Authority getAuthorityByAuthority(String authority) throws TaxFMException;
 	
 	List<Authority> getAllAuthorities();
 	
@@ -18,4 +19,5 @@ public interface AuthorityService {
 	void deleteAuthority(Authority authority);
 	
 	void deleteAuthorityById(Integer id);
+	
 }

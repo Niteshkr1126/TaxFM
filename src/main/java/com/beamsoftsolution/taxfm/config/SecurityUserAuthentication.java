@@ -11,10 +11,15 @@ public class SecurityUserAuthentication implements Authentication {
 	
 	@Serial
 	private static final long serialVersionUID = 1L;
+	
 	private final boolean isAuthenticated;
+	
 	private final String name;
+	
 	private final String password;
+	
 	private final SecurityUser securityUser;
+	
 	private final Collection<GrantedAuthority> authorities;
 	
 	private SecurityUserAuthentication(Collection<GrantedAuthority> authorities, String name, SecurityUser securityUser, String password) {

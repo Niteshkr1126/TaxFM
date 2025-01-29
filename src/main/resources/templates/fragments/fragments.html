@@ -21,6 +21,21 @@
 	<link rel="stylesheet" th:href="@{/css/customers/customers.css}">
 </head>
 
+<!-- access denied head -->
+
+<head th:fragment="access-denied-head">
+	<meta charset="UTF-8">
+	<meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
+	<meta content="ie=edge" http-equiv="X-UA-Compatible">
+	<title th:text="${title}">Access Denied</title>
+	<link rel="icon" type="image/x-icon" th:href="@{/images/common/taxFM_logo.jpeg}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" th:href="@{/css/common/common.css}">
+	<link rel="stylesheet" th:href="@{/css/common/media-queries.css}">
+	<link rel="stylesheet" th:href="@{/css/landing/index.css}">
+	<link rel="stylesheet" th:href="@{/css/home/home.css}">
+</head>
+
 <!-- profile head -->
 
 <head th:fragment="profile-head">
@@ -79,10 +94,10 @@
 				<li><a class="hover-link" href="#team" sec:authorize="!isAuthenticated()">Our Team</a></li>
 				<li><a class="hover-link" href="#career" sec:authorize="!isAuthenticated()">Career</a></li>
 				<li><a class="hover-link" href="#contact" sec:authorize="!isAuthenticated()">Contact Us</a></li>
-				<li><a class="hover-link" th:href="@{/employees}" sec:authorize="isAuthenticated() and hasAuthority('ADMIN')">Employees</a></li>
-				<li><a class="hover-link" th:href="@{/customers}" sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR')">Customers</a></li>
+				<li><a class="hover-link" th:href="@{/employees}" sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR')">Employees</a></li>
+				<li><a class="hover-link" th:href="@{/customers}" sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR', 'JUNIOR')">Customers</a></li>
 				<li><a class="hover-link" th:href="@{/profile}"
-							 sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR')">Profile</a></li>
+							 sec:authorize="isAuthenticated() and hasAnyAuthority('ADMIN', 'SENIOR', 'JUNIOR')">Profile</a></li>
 				<li><a class="hover-link secondary-button" th:href="@{/logout}" sec:authorize="isAuthenticated()">Log Out</a></li>
 			</ul>
 		</div>

@@ -1,10 +1,13 @@
 package com.beamsoftsolution.taxfm.service.impl;
 
 import com.beamsoftsolution.taxfm.exception.TaxFMException;
+import com.beamsoftsolution.taxfm.model.Authority;
 import com.beamsoftsolution.taxfm.model.Customer;
 import com.beamsoftsolution.taxfm.repository.CustomerRepository;
+import com.beamsoftsolution.taxfm.service.AuthorityService;
 import com.beamsoftsolution.taxfm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +17,13 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 	
 	@Autowired
-	private CustomerRepository customerRepository;
+	CustomerRepository customerRepository;
+	
+	@Autowired
+	AuthorityService authorityService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Override
 	public List<Customer> getAllCustomers() {
@@ -36,13 +45,54 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
+	public Customer getCustomerByUsername(String username) throws TaxFMException {
+		Optional<Customer> optionalCustomer = customerRepository.findByUsername(username);
+		if(optionalCustomer.isEmpty()) {
+			throw new TaxFMException("customer.not.found").withErrorCode(404);
+		}
+		return optionalCustomer.get();
+	}
+	
+	@Override
 	public Customer addCustomer(Customer customer) {
+		customer.setPassword(passwordEncoder.encode(customer.getPassword()));
 		return customerRepository.save(customer);
 	}
 	
 	@Override
-	public Customer updateCustomer(Customer customer) {
-		return null;
+	public Customer updateCustomer(Customer customer) throws TaxFMException {
+		Customer existingCustomer = getCustomerById(customer.getCustomerId());
+		existingCustomer.setUsername(customer.getUsername());
+		existingCustomer.setFirstName(customer.getFirstName());
+		existingCustomer.setLastName(customer.getLastName());
+		existingCustomer.setFirmName(customer.getFirmName());
+		existingCustomer.setAddress(customer.getAddress());
+		existingCustomer.setEmail(customer.getEmail());
+		existingCustomer.setPhoneNumber(customer.getPhoneNumber());
+		existingCustomer.setPan(customer.getPan());
+		existingCustomer.setAadharCardNumber(customer.getAadharCardNumber());
+		existingCustomer.setGstNumber(customer.getGstNumber());
+		existingCustomer.setAccountNonExpired(customer.getAccountNonExpired());
+		existingCustomer.setAccountNonLocked(customer.getAccountNonLocked());
+		existingCustomer.setCredentialsNonExpired(customer.getCredentialsNonExpired());
+		existingCustomer.setEnabled(customer.getEnabled());
+		existingCustomer.setAuthorities(customer.getAuthorities());
+		
+		// Add default "CUSTOMER" authority if not already present
+		Authority customerAuthority = authorityService.getAuthorityByAuthority("CUSTOMER");
+		if (customerAuthority != null && !existingCustomer.getAuthorities().contains(customerAuthority)) {
+			existingCustomer.getAuthorities().add(customerAuthority);
+		}
+		
+		existingCustomer.setServices(customer.getServices());
+		return customerRepository.save(existingCustomer);
+	}
+	
+	@Override
+	public void updateCustomerPassword(Integer customerId, String newPassword) throws TaxFMException {
+		Customer customerInDB = getCustomerById(customerId);
+		customerInDB.setPassword(passwordEncoder.encode(newPassword));
+		customerRepository.save(customerInDB);
 	}
 	
 	//	@Override
@@ -82,6 +132,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public void deleteCustomerById(Integer customerId) {
 		customerRepository.deleteById(customerId);
+	}
+	
+	@Override
+	public long getTotalCustomersCount() throws TaxFMException {
+		return customerRepository.count();
 	}
 	
 	//	@Override

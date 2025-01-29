@@ -13,10 +13,11 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @Slf4j
 public class SecurityConfig {
 	
@@ -47,47 +49,43 @@ public class SecurityConfig {
 		return httpSecurity.csrf(AbstractHttpConfigurer::disable)
 		                   .authorizeHttpRequests(authConfig -> {
 			
+			                   // Publicly accessible routes
 			                   authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
+			                   authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "access-denied").permitAll();
+			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/login-error", "/error", "/logout").permitAll();
 			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/services/**", "/career/**").permitAll();
+			                   // Routes for all authenticated users
+			                   authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
 			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/", "/login", "/login-error", "/error", "/logout").permitAll();
-			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/employee-login", "/customer-login", "/login-error", "/error", "/logout").permitAll();
+			                   // Employee routes
+			                   authConfig.requestMatchers(HttpMethod.GET, "/employees/**", "/employees/**/subordinates/**").hasAnyAuthority("ADMIN", "SENIOR");
+			                   authConfig.requestMatchers(HttpMethod.POST, "/employees/**", "/employees/**/subordinates/**").hasAnyAuthority("ADMIN", "SENIOR");
 			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/home").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
+			                   // Customer routes
+			                   authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
+			                   authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
 			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/employees/**").hasAnyAuthority("ADMIN");
-			                   authConfig.requestMatchers(HttpMethod.POST, "/employees/**").hasAnyAuthority("ADMIN");
+			                   // Services routes
+			                   authConfig.requestMatchers(HttpMethod.GET, "/services/**").hasAuthority("CUSTOMER");
 			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyAuthority("ADMIN");
-			                   authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyAuthority("ADMIN");
-			
-			                   authConfig.requestMatchers(HttpMethod.GET, "/authorities").hasAnyAuthority("ADMIN");
-			                   authConfig.requestMatchers(HttpMethod.POST, "/authorities").hasAnyAuthority("ADMIN");
 			                   authConfig.anyRequest().authenticated();
 		                   })
-		                   .formLogin(login -> {
-			                   login.loginPage("/login");
-			                   login.successHandler(customAuthenticationSuccessHandler);
-			                   login.failureUrl("/login-error");
-			                   login.failureHandler(customAuthenticationFailureHandler);
-		                   })
-		                   .logout(logout -> {
-			                   logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
-			                   logout.logoutSuccessUrl("/");
-			                   logout.deleteCookies("JSESSIONID");
-			                   logout.invalidateHttpSession(true);
-		                   })
-		                   .sessionManagement(sessionManagement ->
-				                                      sessionManagement
-						                                      .maximumSessions(1)  // Limit to 1 session per user
-						                                      .expiredUrl("/login?expired=true")  // Redirect to this URL when session expires
-						                                      .sessionRegistry(sessionRegistry()) // Session registry for concurrent session management
-						                                      .and()
-						                                      .sessionFixation(
-								                                      SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)// Protect against session fixation attacks
-						                                      .invalidSessionUrl("/login?invalid=true"))
-		                   .httpBasic(Customizer.withDefaults()).build();
+		                   .formLogin(login -> login.loginPage("/login")
+		                                            .successHandler(customAuthenticationSuccessHandler)
+		                                            .failureUrl("/login-error")
+		                                            .failureHandler(customAuthenticationFailureHandler))
+		                   .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		                                           .logoutSuccessUrl("/")
+		                                           .deleteCookies("JSESSIONID")
+		                                           .invalidateHttpSession(true))
+		                   .exceptionHandling(exception -> exception
+				                   .accessDeniedPage("/access-denied"))
+		                   .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+		                                                                            .maximumSessions(1)
+		                                                                            .expiredUrl("/login")
+		                                                                            .sessionRegistry(sessionRegistry()))
+		                   .httpBasic(Customizer.withDefaults())
+		                   .build();
 	}
 	
 	@Bean

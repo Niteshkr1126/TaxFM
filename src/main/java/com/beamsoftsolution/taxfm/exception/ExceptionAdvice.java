@@ -27,6 +27,7 @@ import java.util.Map;
 public class ExceptionAdvice {
 	
 	private final Locale currentLocale = LocaleContextHolder.getLocale();
+	
 	@Autowired
 	private MessageSource messageSource;
 	

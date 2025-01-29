@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
 			xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/fragments :: common-head}"></head>
@@ -36,7 +37,7 @@
 							<img th:src="@{/images/common/excel.png}" alt=""></label>
 						</div>
 					</div>
-					<a th:href="@{/customers/add}" class="create-link">Add New Customer</a>
+					<a th:if="${showNewCustomerAddition}" sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/add}" class="create-link">Add New Customer</a>
 				</section>
 				<section class="customer__table__body">
 					<table>
@@ -62,9 +63,9 @@
 							<td th:text="${customer.address}"></td>
 							<td th:text="${customer.phoneNumber}"></td>
 							<td class="action">
-								<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a> <a
-									th:href="@{/customers/{customerId}/edit(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a> <a
-									th:href="@{/customers/{customerId}/delete(customerId=${customer.customerId})}" onclick="return confirm('Are you sure?')"><img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt=""></a>
+								<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/{customerId}/edit(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/{customerId}/delete(customerId=${customer.customerId})}" onclick="return confirm('Are you sure?')"><img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt=""></a>
 							</td>
 						</tr>
 						</tbody>

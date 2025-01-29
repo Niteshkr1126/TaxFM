@@ -14,9 +14,13 @@ public class SecurityUser extends User {
 	
 	@Serial
 	private static final long serialVersionUID = 1L;
+	
 	private String firstName;
+	
 	private String lastName;
+	
 	private String fullName;
+	
 	private String email;
 	
 	public SecurityUser(String username, String password, boolean enabled, boolean accountNonExpired,

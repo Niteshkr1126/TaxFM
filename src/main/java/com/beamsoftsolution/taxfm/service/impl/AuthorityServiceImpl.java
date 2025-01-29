@@ -31,6 +31,11 @@ public class AuthorityServiceImpl implements AuthorityService {
 		return optionalAuthority.get();
 	}
 	
+	public Authority getAuthorityByAuthority(String authority) throws TaxFMException {
+		return authorityRepository.findByAuthority(authority)
+		                          .orElseThrow(() -> new TaxFMException("Authority '" + authority + "' not found"));
+	}
+	
 	@Override
 	public Authority addAuthority(Authority authority) {
 		return authorityRepository.save(authority);

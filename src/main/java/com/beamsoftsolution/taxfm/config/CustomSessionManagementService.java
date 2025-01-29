@@ -12,14 +12,14 @@ import java.util.List;
 @Slf4j
 @Component
 public class CustomSessionManagementService {
-
+	
 	@Autowired
-	private SessionRegistry sessionRegistry;
-
+	SessionRegistry sessionRegistry;
+	
 	public void invalidateUserSessions(String username) {
 		// Retrieve the user's sessions
 		List<Object> principals = sessionRegistry.getAllPrincipals();
-		log.info(principals.toString());
+		System.out.println("principals: " + principals);
 		for(Object principal : principals) {
 			if(principal instanceof UserDetails userDetails) {
 				if(userDetails.getUsername().equals(username)) {

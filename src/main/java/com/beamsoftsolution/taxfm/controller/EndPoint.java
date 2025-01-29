@@ -8,4 +8,5 @@ public interface EndPoint {
 	String CUSTOMERS = "/customers";
 	String PROFILE = "/profile";
 	String SERVICES = "/services";
+	String PRICING = "/pricing";
 }

@@ -14,7 +14,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
-
+	
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		String loginType = request.getParameter("loginType");  // Get loginType from the form submission (e.g., "employee" or "customer")

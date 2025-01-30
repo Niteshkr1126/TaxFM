@@ -12,7 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,46 +46,52 @@ public class SecurityConfig {
 	// Authorization
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-		                   .authorizeHttpRequests(authConfig -> {
-			
-			                   // Publicly accessible routes
-			                   authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
-			                   authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "access-denied").permitAll();
-			                   authConfig.requestMatchers(HttpMethod.POST, "/", "/login-error", "/error", "/logout").permitAll();
-			
-			                   // Routes for all authenticated users
-			                   authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
-			
-			                   // Employee routes
-			                   authConfig.requestMatchers(HttpMethod.GET, "/employees/**", "/employees/**/subordinates/**").hasAnyAuthority("ADMIN", "SENIOR");
-			                   authConfig.requestMatchers(HttpMethod.POST, "/employees/**", "/employees/**/subordinates/**").hasAnyAuthority("ADMIN", "SENIOR");
-			
-			                   // Customer routes
-			                   authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
-			                   authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
-			
-			                   // Services routes
-			                   authConfig.requestMatchers(HttpMethod.GET, "/services/**").hasAuthority("CUSTOMER");
-			
-			                   authConfig.anyRequest().authenticated();
-		                   })
-		                   .formLogin(login -> login.loginPage("/login")
-		                                            .successHandler(customAuthenticationSuccessHandler)
-		                                            .failureUrl("/login-error")
-		                                            .failureHandler(customAuthenticationFailureHandler))
-		                   .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-		                                           .logoutSuccessUrl("/")
-		                                           .deleteCookies("JSESSIONID")
-		                                           .invalidateHttpSession(true))
-		                   .exceptionHandling(exception -> exception
-				                   .accessDeniedPage("/access-denied"))
-		                   .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-		                                                                            .maximumSessions(1)
-		                                                                            .expiredUrl("/login")
-		                                                                            .sessionRegistry(sessionRegistry()))
-		                   .httpBasic(Customizer.withDefaults())
-		                   .build();
+		return httpSecurity
+				.cors(Customizer.withDefaults())
+				.csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(authConfig -> {
+					
+					// Publicly accessible routes
+					authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
+					authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "/access-denied")
+					          .permitAll();
+					authConfig.requestMatchers(HttpMethod.POST, "/", "/login-error", "/error", "/logout").permitAll();
+					
+					// Routes for all authenticated users
+					authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
+					
+					// Employee routes
+					authConfig.requestMatchers(HttpMethod.GET, "/employees/**").hasAnyAuthority("ADMIN", "SENIOR");
+					authConfig.requestMatchers(HttpMethod.POST, "/employees/**").hasAnyAuthority("ADMIN", "SENIOR");
+					
+					// Customer routes
+					authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
+					authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
+					
+					// Services routes
+					authConfig.requestMatchers(HttpMethod.GET, "/services/**").hasAuthority("CUSTOMER");
+					
+					authConfig.anyRequest().authenticated();
+				})
+				.formLogin(login -> login.
+						loginPage("/login")
+						.successHandler(customAuthenticationSuccessHandler)
+						.failureUrl("/login-error")
+						.failureHandler(customAuthenticationFailureHandler))
+				.logout(logout -> logout.
+						logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessUrl("/")
+						.deleteCookies("JSESSIONID")
+						.invalidateHttpSession(true))
+				.exceptionHandling(exception -> exception
+						.accessDeniedPage("/access-denied"))
+				.sessionManagement(sessionManagement -> sessionManagement
+						.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+						.maximumSessions(1)
+						.expiredUrl("/login")
+						.sessionRegistry(sessionRegistry()))
+				.httpBasic(Customizer.withDefaults())
+				.build();
 	}
 	
 	@Bean
@@ -98,10 +104,8 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class)
-		           .authenticationProvider(authenticationProvider())
-		           .build();
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 	
 	// PasswordEncoder

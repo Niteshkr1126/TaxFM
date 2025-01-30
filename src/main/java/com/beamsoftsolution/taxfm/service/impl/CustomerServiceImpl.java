@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		// Add default "CUSTOMER" authority if not already present
 		Authority customerAuthority = authorityService.getAuthorityByAuthority("CUSTOMER");
-		if (customerAuthority != null && !existingCustomer.getAuthorities().contains(customerAuthority)) {
+		if(customerAuthority != null && !existingCustomer.getAuthorities().contains(customerAuthority)) {
 			existingCustomer.getAuthorities().add(customerAuthority);
 		}
 		

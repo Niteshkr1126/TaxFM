@@ -15,5 +15,5 @@ public interface CustomerService {
 	Customer updateCustomer(Customer customer) throws TaxFMException;
 	void updateCustomerPassword(Integer customerId, String newPassword) throws TaxFMException;
 	void deleteCustomerById(Integer customerId) throws TaxFMException;
-	long getTotalCustomersCount() throws TaxFMException;;
+	long getTotalCustomersCount() throws TaxFMException;
 }

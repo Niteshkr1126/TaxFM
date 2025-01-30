@@ -9,5 +9,6 @@ public class Constants {
 	public static final String COMPANY_NAME = "TaxFM";
 	
 	public static final int MAX_EMPLOYEES = 50;
+	
 	public static final int MAX_CUSTOMERS = 50;
 }

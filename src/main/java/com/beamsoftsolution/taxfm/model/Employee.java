@@ -66,7 +66,7 @@ public class Employee {
 			@JoinColumn(name = "authorityId", referencedColumnName = "authorityId") })
 	private List<Authority> authorities;
 	
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
 			name = "employees_customers",
 			joinColumns = { @JoinColumn(name = "employeeId", referencedColumnName = "employeeId") },

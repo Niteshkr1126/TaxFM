@@ -81,10 +81,11 @@ public class EmployeeController {
 		else if(loggedInEmployee.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("SENIOR"))) {
 			Employee targetEmployee = employeeService.getEmployeeById(employeeId);
 			// Check if the targetEmployee exists and is a subordinate of the logged-in SENIOR
-			if (targetEmployee != null && loggedInEmployee.getSubordinates().contains(targetEmployee)) {
+			if(targetEmployee != null && loggedInEmployee.getSubordinates().contains(targetEmployee)) {
 				// If the employeeId is a subordinate, add the employee to the model
 				model.addAttribute("employee", targetEmployee);
-			} else {
+			}
+			else {
 				return "redirect:/access-denied";
 			}
 		}

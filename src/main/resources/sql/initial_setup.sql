@@ -52,12 +52,19 @@ CREATE TRIGGER after_session_delete
 AFTER DELETE ON SPRING_SESSION
 FOR EACH ROW
 BEGIN
-    -- Convert session expiry time to match attendance timezone
-    UPDATE attendance
-    SET logout_time = FROM_UNIXTIME((OLD.LAST_ACCESS_TIME + (OLD.MAX_INACTIVE_INTERVAL * 1000)) / 1000)
-    WHERE username = OLD.PRINCIPAL_NAME
-    ORDER BY login_time DESC
-    LIMIT 1;
+    DECLARE computed_logout_time DATETIME;
+
+    -- Calculate the logout_time based on last access time + max inactive interval
+    SET computed_logout_time = FROM_UNIXTIME((OLD.LAST_ACCESS_TIME + (OLD.MAX_INACTIVE_INTERVAL * 1000)) / 1000);
+
+    -- Only update if computed_logout_time is in the past
+    IF computed_logout_time <= NOW() THEN
+        UPDATE attendance
+        SET logout_time = computed_logout_time
+        WHERE username = OLD.PRINCIPAL_NAME
+        ORDER BY login_time DESC
+        LIMIT 1;
+    END IF;
 END$$
 
 DELIMITER ;

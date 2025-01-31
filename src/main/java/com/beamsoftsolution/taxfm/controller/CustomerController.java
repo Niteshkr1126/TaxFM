@@ -14,12 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @Slf4j
@@ -77,15 +75,17 @@ public class CustomerController {
 		Integer loggedInEmployeeId = loggedInEmployee.getEmployeeId();
 		model.addAttribute("loggedInEmployeeId", loggedInEmployeeId);
 		
-		// Check if the logged-in employee is assigned to the requested customer
-		boolean hasAccess = loggedInEmployee.getAssignedCustomers().stream().anyMatch(customer -> customer.getCustomerId().equals(customerId));
+		boolean isAdmin = loggedInEmployee.getAuthorities().stream()
+		                                  .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+		
+		// Check if the logged-in employee has access
+		boolean hasAccess = isAdmin || loggedInEmployee.getAssignedCustomers().stream().anyMatch(customer -> customer.getCustomerId().equals(customerId));
 		
 		if(!hasAccess) {
 			return "redirect:/access-denied";
 		}
 		
-		Customer customer = customerService.getCustomerById(customerId);
-		model.addAttribute("customer", customer);
+		model.addAttribute("customer", customerService.getCustomerById(customerId));
 		return "customers/customer";
 	}
 	
@@ -196,6 +196,31 @@ public class CustomerController {
 		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
 		//		customer.getServiceDetails().remove(Integer.parseInt(request.getParameter("removeServiceDetail")));
 		return "customers/addCustomer";
+	}
+	
+	@PostMapping("/{customerId}/toggle-lock")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public String toggleLock(@PathVariable Integer customerId) throws TaxFMException {
+		customerService.toggleLock(customerId);
+		return "redirect:/customers/" + customerId;
+	}
+	
+	@PostMapping("/{customerId}/toggle-enable")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public String toggleEnable(@PathVariable Integer customerId) throws TaxFMException {
+		customerService.toggleEnable(customerId);
+		return "redirect:/customers/" + customerId;
+	}
+	
+	@PostMapping("/{customerId}/reset-password")
+	@PreAuthorize("hasAuthority('CUSTOMER')")
+	public String resetPassword(@PathVariable Integer customerId, @RequestParam String newPassword) throws TaxFMException {
+		Integer loggedInEmployeeId = customerService.getLoggedInCustomer().getCustomerId();
+		if(Objects.equals(loggedInEmployeeId, customerId)) {
+			customerService.resetPassword(customerId, newPassword);
+			return "redirect:/profile";
+		}
+		return "redirect:/access-denied";
 	}
 	
 	@GetMapping("/{customerId}/delete")

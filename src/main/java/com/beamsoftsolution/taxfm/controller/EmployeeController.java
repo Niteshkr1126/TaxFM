@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -180,6 +181,31 @@ public class EmployeeController {
 	public String removeSubordinate(@PathVariable Integer employeeId, @PathVariable Integer subordinateId, RedirectAttributes redirectAttributes) throws TaxFMException {
 		employeeService.removeSubordinate(employeeId, subordinateId);
 		return "redirect:/employees/" + employeeId;
+	}
+	
+	@PostMapping("/{employeeId}/toggle-lock")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public String toggleLock(@PathVariable Integer employeeId) throws TaxFMException {
+		employeeService.toggleLock(employeeId);
+		return "redirect:/employees/" + employeeId;
+	}
+	
+	@PostMapping("/{employeeId}/toggle-enable")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public String toggleEnable(@PathVariable Integer employeeId) throws TaxFMException {
+		employeeService.toggleEnable(employeeId);
+		return "redirect:/employees/" + employeeId;
+	}
+	
+	@PostMapping("/{employeeId}/reset-password")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'SENIOR', 'JUNIOR')")
+	public String resetPassword(@PathVariable Integer employeeId, @RequestParam String newPassword) throws TaxFMException {
+		Integer loggedInEmployeeId = employeeService.getLoggedInEmployee().getEmployeeId();
+		if(Objects.equals(loggedInEmployeeId, employeeId)) {
+			employeeService.resetPassword(employeeId, newPassword);
+			return "redirect:/profile";
+		}
+		return "redirect:/access-denied";
 	}
 	
 	@GetMapping("/{employeeId}/delete")

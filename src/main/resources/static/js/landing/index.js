@@ -1,43 +1,79 @@
-// Font Awesome script loading
-const loadFontAwesome = () => {
-    const script = document.createElement('script');
-    script.src = "https://kit.fontawesome.com/23f7a91253.js";
-    script.crossOrigin = "anonymous";
-    document.head.appendChild(script);
-};
+class FontAwesomeLoader {
+  static load() {
+    if (!document.querySelector('script[src*="fontawesome"]')) {
+      const script = document.createElement('script');
+      script.src = "https://kit.fontawesome.com/23f7a91253.js";
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+    }
+  }
+}
 
-// Tab switching functionality
-function openTab(event, tabId) {
+class TabSwitcher {
+  constructor() {
+    this.tabLinks = document.querySelectorAll('.tab-link');
+    this.loginForms = document.querySelectorAll('.login');
+  }
+
+  init() {
+    this.tabLinks.forEach(link => {
+      link.addEventListener('click', (e) => this.handleTabClick(e));
+    });
+  }
+
+  handleTabClick(event) {
     event.preventDefault();
-    document.querySelectorAll('.tab-link').forEach(button => button.classList.remove('active'));
-    document.querySelectorAll('.login').forEach(form => form.classList.remove('active'));
+    const tabId = event.currentTarget.getAttribute('href').replace('#', '');
+
+    this.tabLinks.forEach(button => button.classList.remove('active'));
+    this.loginForms.forEach(form => form.classList.remove('active'));
 
     event.currentTarget.classList.add('active');
     document.getElementById(tabId).classList.add('active');
+  }
 }
 
-// Smooth scrolling functionality
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+class SmoothScroller {
+  constructor() {
+    this.anchors = document.querySelectorAll('a[href^="#"]');
+    this.topBanner = document.querySelector('.top-banner');
+    this.navBar = document.querySelector('nav');
+  }
 
-            if (target) {
-                // Calculate offset based on top banner and nav bar height
-                const topBannerHeight = document.querySelector('.top-banner').offsetHeight || 0;
-                const navBarHeight = document.querySelector('nav').offsetHeight || 0;
-                const totalOffset = topBannerHeight + navBarHeight;
-
-                // Smooth scroll to the target with offset
-                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - totalOffset;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth',
-                });
-            }
-        });
+  init() {
+    this.anchors.forEach(anchor => {
+      anchor.addEventListener('click', (e) => this.handleScroll(e));
     });
+  }
 
-// Initialize the script
-loadFontAwesome();
+  handleScroll(event) {
+    event.preventDefault();
+    const targetSelector = event.currentTarget.getAttribute('href');
+    const target = document.querySelector(targetSelector);
+
+    if (target) {
+      const targetPosition = this.calculateTargetPosition(target);
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  calculateTargetPosition(target) {
+    const topBannerHeight = this.topBanner ? this.topBanner.offsetHeight : 0;
+    const navBarHeight = this.navBar ? this.navBar.offsetHeight : 0;
+    return target.getBoundingClientRect().top + window.pageYOffset - (topBannerHeight + navBarHeight);
+  }
+}
+
+class App {
+  static init() {
+    FontAwesomeLoader.load();
+    new TabSwitcher().init();
+    new SmoothScroller().init();
+  }
+}
+
+// Initialize application when DOM is ready
+document.addEventListener('DOMContentLoaded', App.init);

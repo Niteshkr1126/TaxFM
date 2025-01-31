@@ -45,3 +45,26 @@
 .shadow-none {
     box-shadow: none!important;
 }
+.btn-account-control {
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+.btn-account-control:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.was-validated .form-control:invalid, .form-control.is-invalid {
+    border-color: #dc3545;
+}
+.was-validated .form-control:valid, .form-control.is-valid {
+    border-color: #28a745;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.is-invalid + .invalid-feedback {
+    display: block;
+}

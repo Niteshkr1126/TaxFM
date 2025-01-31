@@ -45,7 +45,7 @@ public class ProfileController {
 			Employee employee = employeeService.getLoggedInEmployee();
 			if(employee != null) {
 				model.addAttribute("employee", employee);
-				model.addAttribute("currentEmployeeId", employee.getEmployeeId());
+				model.addAttribute("loggedInEmployeeId", employee.getEmployeeId());
 				return "/home/employee-profile";
 			}
 			else {

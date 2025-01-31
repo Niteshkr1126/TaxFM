@@ -238,12 +238,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	public List<Employee> getAvailableEmployeesForSubordination(Integer employeeId) throws TaxFMException {
-		Employee current = getEmployeeById(employeeId);
+		Employee employee = getEmployeeById(employeeId);
 		
 		return employeeRepository.findAll().stream()
-		                         .filter(e -> !e.equals(current))
-		                         .filter(e -> !current.getSubordinates().contains(e))
+		                         .filter(e -> !e.equals(employee))
+		                         .filter(e -> !employee.getSubordinates().contains(e))
 		                         .filter(e -> e.getAuthorities().stream().noneMatch(authority -> "ADMIN".equalsIgnoreCase(authority.getAuthority())))
 		                         .collect(Collectors.toList());
+	}
+	
+	@Override
+	public void toggleLock(Integer employeeId) throws TaxFMException {
+		Employee employee = getEmployeeById(employeeId);
+		employee.setAccountNonLocked(!employee.getAccountNonLocked());
+		employeeRepository.save(employee);
+	}
+	
+	@Override
+	public void toggleEnable(Integer employeeId) throws TaxFMException {
+		Employee employee = getEmployeeById(employeeId);
+		employee.setEnabled(!employee.getEnabled());
+		employeeRepository.save(employee);
+	}
+	
+	@Override
+	public void resetPassword(Integer employeeId, String newPassword) throws TaxFMException {
+		Employee employee = getEmployeeById(employeeId);
+		employee.setPassword(passwordEncoder.encode(newPassword));
+		employeeRepository.save(employee);
 	}
 }

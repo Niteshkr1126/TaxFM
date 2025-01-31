@@ -18,8 +18,9 @@
 	<section class="employee-section">
 		<div class="container">
 			<div class="row gutters-sm">
-				<!-- Employee Profile Card -->
+				<!-- Left Column -->
 				<div class="col-md-4 mb-3">
+					<!-- Profile Card -->
 					<div class="card">
 						<div class="card-body">
 							<div class="d-flex flex-column align-items-center text-center">
@@ -32,6 +33,7 @@
 							</div>
 						</div>
 					</div>
+					
 					<!-- Contact Information -->
 					<div class="card mt-3">
 						<ul class="list-group list-group-flush">
@@ -45,10 +47,92 @@
 							</li>
 						</ul>
 					</div>
+					
+					<!-- Account Status -->
+					<div class="card mt-3">
+						<div class="card-body">
+							<h6 class="d-flex align-items-center mb-3">
+								<i class="fas fa-user-lock text-warning mr-2"></i>Account Status
+								<span class="ml-auto">
+                <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#resetPasswordModal">
+                    <i class="fas fa-key"></i> Reset Password
+                </button></span>
+							</h6>
+							<ul class="list-unstyled">
+								<!-- Account Lock Status -->
+								<li class="mb-2 d-flex justify-content-between align-items-center">
+									<div>
+										Account Locked:
+										<span th:text="${employee.accountNonLocked} ? 'No' : 'Yes'"
+													th:class="${employee.accountNonLocked} ? 'text-success' : 'text-danger'">
+                    </span>
+									</div>
+								</li>
+								
+								<!-- Account Enabled Status -->
+								<li class="mb-2 d-flex justify-content-between align-items-center">
+									<div>
+										Account Enabled:
+										<span th:text="${employee.enabled} ? 'Yes' : 'No'"
+													th:class="${employee.enabled} ? 'text-success' : 'text-danger'">
+                    </span>
+									</div>
+								</li>
+								
+								<!-- Read-only Statuses -->
+								<li class="mb-2">
+									Account Expired:
+									<span th:text="${employee.accountNonExpired} ? 'No' : 'Yes'"
+												th:class="${employee.accountNonExpired} ? 'text-success' : 'text-danger'"></span>
+								</li>
+								<li>
+									Credentials Expired:
+									<span th:text="${employee.credentialsNonExpired} ? 'No' : 'Yes'"
+												th:class="${employee.credentialsNonExpired} ? 'text-success' : 'text-danger'"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<!-- Reset Password Modal -->
+					<div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form th:action="@{/employees/{employeeId}/reset-password(employeeId=${employee.employeeId})}" method="post" id="resetPasswordForm">
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="newPassword">New Password</label>
+											<input type="password" class="form-control" id="newPassword" name="newPassword"
+														 required minlength="8" placeholder="Enter new password">
+											<small class="form-text text-muted">Minimum 8 characters</small>
+										</div>
+										<div class="form-group">
+											<label for="confirmPassword">Confirm Password</label>
+											<input type="password" class="form-control" id="confirmPassword"
+														 required data-match="#newPassword" data-match-error="Passwords don't match"
+														 placeholder="Confirm new password">
+											<div class="invalid-feedback"></div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn btn-primary">Reset Password</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 				
-				<!-- Employee Details -->
+				<!-- Right Column -->
 				<div class="col-md-8">
+					<!-- Employee Details -->
 					<div class="card mb-3">
 						<div class="card-body">
 							<div class="row">
@@ -117,9 +201,9 @@
 					</div>
 					
 					<!-- Assigned Customers -->
-					<div class="row gutters-sm" th:if="${!(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId == currentEmployeeId) and
-            !(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != currentEmployeeId and employee.authorities.?[authority == 'ADMIN'] == null) and
-            ((#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != currentEmployeeId and employee.authorities.?[authority == 'ADMIN'] != null) or !#authorization.expression('hasAuthority(''ADMIN'')'))}">
+					<div class="row gutters-sm" th:if="${!(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId == loggedInEmployeeId) and
+                        !(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId and employee.authorities.?[authority == 'ADMIN'] == null) and
+                        ((#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId and employee.authorities.?[authority == 'ADMIN'] != null) or !#authorization.expression('hasAuthority(''ADMIN'')'))}">
 						<div class="col-sm-12 mb-3">
 							<div class="card h-100">
 								<div class="card-body">
@@ -130,7 +214,7 @@
 												class="btn btn-primary btn-sm ml-auto"
 												data-toggle="modal"
 												data-target="#assignCustomerModal"
-												th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != currentEmployeeId)}">
+												th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != loggedInEmployeeId)}">
 											Assign Customer
 										</button>
 									</h6>
@@ -138,27 +222,22 @@
 									<ul class="list-group">
 										<li th:each="customer : ${employee.assignedCustomers}" class="list-group-item mb-3">
 											<div class="row">
-												<!-- Anchor tag wrapping the customer details, making the row clickable -->
 												<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}" class="col-10 text-decoration-none">
 													<div class="row">
-														<!-- Customer Firm Name -->
 														<div class="col-md-4">
 															<span th:text="${customer.firmName}" class="text-muted"></span>
 														</div>
-														<!-- Customer Username -->
 														<div class="col-md-4">
 															<span th:text="${customer.username}" class="font-weight-bold"></span>
 														</div>
-														<!-- Arrow Icon (Action) -->
 														<div class="col-md-4 text-right">
 															<i class="fas fa-arrow-right"></i>
 														</div>
 													</div>
 												</a>
-												<!-- Delete button on the right side, outside the anchor tag -->
 												<form th:action="@{/employees/{employeeId}/remove-customer(customerId=${customer.customerId}, employeeId=${employee.employeeId})}" method="post" class="col-2 text-right" style="display:inline;">
 													<button type="submit" class="btn btn-danger btn-sm"
-																	th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != currentEmployeeId)}">
+																	th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != loggedInEmployeeId)}">
 														<i class="fas fa-trash-alt"></i> Remove
 													</button>
 												</form>
@@ -182,10 +261,7 @@
 								</div>
 								<form th:action="@{/employees/assign-customer}" method="post">
 									<div class="modal-body">
-										<!-- Employee ID (Hidden Field) -->
 										<input type="hidden" name="employeeId" th:value="${employee.employeeId}"/>
-										
-										<!-- Customer Dropdown -->
 										<div class="form-group">
 											<label for="customerId">Select Customer</label>
 											<select class="form-control" id="customerId" name="customerId" required>
@@ -205,27 +281,6 @@
 							</div>
 						</div>
 					</div>
-					
-					<!-- Account Status -->
-					<div class="card mt-3">
-						<div class="card-body">
-							<h6 class="d-flex align-items-center mb-3"><i class="fas fa-lock text-warning mr-2"></i>Account Status</h6>
-							<ul>
-								<li>
-									Account Non-Expired: <span th:text="${employee.accountNonExpired} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Account Non-Locked: <span th:text="${employee.accountNonLocked} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Credentials Non-Expired: <span th:text="${employee.credentialsNonExpired} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Enabled: <span th:text="${employee.enabled} ? 'Yes' : 'No'"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -234,10 +289,10 @@
 
 <!-- Footer -->
 <footer th:replace="~{fragments/fragments :: sub-footer}"></footer>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap JS -->
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:src="@{/js/employees/employees.js}"></script>
 </body>
 </html>

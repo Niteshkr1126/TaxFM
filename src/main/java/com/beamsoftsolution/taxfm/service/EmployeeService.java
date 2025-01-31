@@ -32,4 +32,7 @@ public interface EmployeeService {
 	@Transactional
 	void removeSubordinate(Integer employeeId, Integer subordinateId) throws TaxFMException;
 	List<Employee> getAvailableEmployeesForSubordination(Integer employeeId) throws TaxFMException;
+	void toggleLock(Integer employeeId) throws TaxFMException;
+	void toggleEnable(Integer employeeId) throws TaxFMException;
+	void resetPassword(Integer employeeId, String newPassword) throws TaxFMException;
 }

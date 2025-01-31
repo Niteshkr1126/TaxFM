@@ -18,8 +18,9 @@
 	<section class="employee-section">
 		<div class="container">
 			<div class="row gutters-sm">
-				<!-- Employee Profile Card -->
+				<!-- Left Column -->
 				<div class="col-md-4 mb-3">
+					<!-- Profile Card -->
 					<div class="card">
 						<div class="card-body">
 							<div class="d-flex flex-column align-items-center text-center">
@@ -32,6 +33,7 @@
 							</div>
 						</div>
 					</div>
+					
 					<!-- Contact Information -->
 					<div class="card mt-3">
 						<ul class="list-group list-group-flush">
@@ -45,10 +47,69 @@
 							</li>
 						</ul>
 					</div>
+					
+					<!-- Account Status -->
+					<div class="card mt-3">
+						<div class="card-body">
+							<h6 class="d-flex align-items-center mb-3">
+								<i class="fas fa-user-lock text-warning mr-2"></i>Account Status
+							</h6>
+							<ul class="list-unstyled">
+								<!-- Account Lock Status -->
+								<li class="mb-2 d-flex justify-content-between align-items-center">
+									<div>
+										Account Locked:
+										<span th:text="${employee.accountNonLocked} ? 'No' : 'Yes'"
+													th:class="${employee.accountNonLocked} ? 'text-success' : 'text-danger'">
+                    </span>
+									</div>
+									<form th:action="@{/employees/{employeeId}/toggle-lock(employeeId=${employee.employeeId})}" method="post"
+												th:if="${#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId}">
+										<button type="submit" class="btn btn-sm"
+														th:classappend="${employee.accountNonLocked} ? 'btn-outline-danger' : 'btn-outline-success'">
+											<i th:class="${employee.accountNonLocked} ? 'fas fa-unlock' : 'fas fa-lock'"></i>
+											<span th:text="${employee.accountNonLocked} ? ' Lock Account' : ' Unlock Account'"></span>
+										</button>
+									</form>
+								</li>
+								
+								<!-- Account Enabled Status -->
+								<li class="mb-2 d-flex justify-content-between align-items-center">
+									<div>
+										Account Enabled:
+										<span th:text="${employee.enabled} ? 'Yes' : 'No'"
+													th:class="${employee.enabled} ? 'text-success' : 'text-danger'">
+                    </span>
+									</div>
+									<form th:action="@{/employees/{employeeId}/toggle-enable(employeeId=${employee.employeeId})}" method="post"
+												th:if="${#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId}">
+										<button type="submit" class="btn btn-sm"
+														th:classappend="${employee.enabled} ? 'btn-outline-danger' : 'btn-outline-success'">
+											<i th:class="${employee.enabled} ? 'fas fa-toggle-on' : 'fas fa-toggle-off'"></i>
+											<span th:text="${employee.enabled} ? ' Disable Account' : ' Enable Account'"></span>
+										</button>
+									</form>
+								</li>
+								
+								<!-- Read-only Statuses -->
+								<li class="mb-2">
+									Account Expired:
+									<span th:text="${employee.accountNonExpired} ? 'No' : 'Yes'"
+												th:class="${employee.accountNonExpired} ? 'text-success' : 'text-danger'"></span>
+								</li>
+								<li>
+									Credentials Expired:
+									<span th:text="${employee.credentialsNonExpired} ? 'No' : 'Yes'"
+												th:class="${employee.credentialsNonExpired} ? 'text-success' : 'text-danger'"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 				
-				<!-- Employee Details -->
+				<!-- Right Column -->
 				<div class="col-md-8">
+					<!-- Employee Details -->
 					<div class="card mb-3">
 						<div class="card-body">
 							<div class="row">
@@ -117,9 +178,9 @@
 					</div>
 					
 					<!-- Assigned Customers -->
-					<div class="row gutters-sm" th:if="${!(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId == currentEmployeeId) and
-            !(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != currentEmployeeId and employee.authorities.?[authority == 'ADMIN'] == null) and
-            ((#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != currentEmployeeId and employee.authorities.?[authority == 'ADMIN'] != null) or !#authorization.expression('hasAuthority(''ADMIN'')'))}">
+					<div class="row gutters-sm" th:if="${!(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId == loggedInEmployeeId) and
+                        !(#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId and employee.authorities.?[authority == 'ADMIN'] == null) and
+                        ((#authorization.expression('hasAuthority(''ADMIN'')') and employee.employeeId != loggedInEmployeeId and employee.authorities.?[authority == 'ADMIN'] != null) or !#authorization.expression('hasAuthority(''ADMIN'')'))}">
 						<div class="col-sm-12 mb-3">
 							<div class="card h-100">
 								<div class="card-body">
@@ -130,7 +191,7 @@
 												class="btn btn-primary btn-sm ml-auto"
 												data-toggle="modal"
 												data-target="#assignCustomerModal"
-												th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != currentEmployeeId)}">
+												th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != loggedInEmployeeId)}">
 											Assign Customer
 										</button>
 									</h6>
@@ -138,27 +199,22 @@
 									<ul class="list-group">
 										<li th:each="customer : ${employee.assignedCustomers}" class="list-group-item mb-3">
 											<div class="row">
-												<!-- Anchor tag wrapping the customer details, making the row clickable -->
 												<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}" class="col-10 text-decoration-none">
 													<div class="row">
-														<!-- Customer Firm Name -->
 														<div class="col-md-4">
 															<span th:text="${customer.firmName}" class="text-muted"></span>
 														</div>
-														<!-- Customer Username -->
 														<div class="col-md-4">
 															<span th:text="${customer.username}" class="font-weight-bold"></span>
 														</div>
-														<!-- Arrow Icon (Action) -->
 														<div class="col-md-4 text-right">
 															<i class="fas fa-arrow-right"></i>
 														</div>
 													</div>
 												</a>
-												<!-- Delete button on the right side, outside the anchor tag -->
 												<form th:action="@{/employees/{employeeId}/remove-customer(customerId=${customer.customerId}, employeeId=${employee.employeeId})}" method="post" class="col-2 text-right" style="display:inline;">
 													<button type="submit" class="btn btn-danger btn-sm"
-																	th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+																	th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''SENIOR'')') and (employee.employeeId != loggedInEmployeeId)}">
 														<i class="fas fa-trash-alt"></i> Remove
 													</button>
 												</form>
@@ -182,10 +238,7 @@
 								</div>
 								<form th:action="@{/employees/assign-customer}" method="post">
 									<div class="modal-body">
-										<!-- Employee ID (Hidden Field) -->
 										<input type="hidden" name="employeeId" th:value="${employee.employeeId}"/>
-										
-										<!-- Customer Dropdown -->
 										<div class="form-group">
 											<label for="customerId">Select Customer</label>
 											<select class="form-control" id="customerId" name="customerId" required>
@@ -205,116 +258,6 @@
 							</div>
 						</div>
 					</div>
-					
-					<!-- Subordinates Section -->
-					<!--	todo:	should not be visible for junior-->
-					<div class="row gutters-sm mt-4">
-						<div class="col-sm-12 mb-3">
-							<div class="card h-100">
-								<div class="card-body">
-									<h6 class="d-flex align-items-center mb-3">
-										<i class="fas fa-users text-info mr-2"></i>Subordinates<!-- Add Subordinate Button -->
-										<button class="btn btn-primary btn-sm ml-auto"
-														data-toggle="modal"
-														data-target="#addSubordinateModal"
-														th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
-											Add Subordinate
-										</button>
-									</h6>
-									
-									<!-- Subordinates List -->
-									<ul class="list-group">
-										<li th:each="subordinate : ${employee.subordinates}" class="list-group-item mb-3">
-											<div class="row align-items-center">
-												<div class="col-10">
-													<a th:href="@{/employees/{id}(id=${subordinate.employeeId})}"
-														 class="text-decoration-none">
-														<div class="d-flex align-items-center">
-															<img src="https://bootdey.com/img/Content/avatar/avatar7.png"
-																	 class="rounded-circle mr-3"
-																	 width="40"
-																	 alt="Subordinate">
-															<div>
-                                            <span class="font-weight-bold"
-																									th:text="${subordinate.firstName + ' ' + subordinate.lastName}"></span>
-																<br>
-																<small class="text-muted"
-																			 th:text="${subordinate.designation}"></small>
-															</div>
-														</div>
-													</a>
-												</div>
-												<div class="col-2 text-right">
-													<!-- Remove Subordinate Button -->
-													<form th:action="@{/employees/{employeeId}/subordinates/{subordinateId}/delete(employeeId=${employee.employeeId}, subordinateId=${subordinate.employeeId})}"
-																method="post">
-														<button type="submit" class="btn btn-danger btn-sm">
-															<i class="fas fa-trash-alt"></i>
-														</button>
-													</form>
-												</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<!-- Add Subordinate Modal -->
-					<div class="modal fade" id="addSubordinateModal" tabindex="-1" role="dialog" aria-labelledby="addSubordinateModalLabel" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="addSubordinateModalLabel">Add Subordinate</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<!-- Add Subordinate Form -->
-								<form th:action="@{/employees/{employeeId}/subordinates(employeeId=${employee.employeeId})}" method="post">
-									<div class="modal-body">
-										<div class="form-group">
-											<label for="subordinateId">Select Employee</label>
-											<select class="form-control" id="subordinateId" name="subordinateId" required>
-												<option value="" disabled selected>Select an Employee</option>
-												<option th:each="emp : ${availableEmployees}"
-																th:value="${emp.employeeId}"
-																th:text="${emp.firstName + ' ' + emp.lastName + ' (' + emp.designation + ')'}"
-																th:disabled="${emp.employeeId == employee.employeeId}">
-												</option>
-											</select>
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-										<button type="submit" class="btn btn-primary">Add Subordinate</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-					
-					<!-- Account Status -->
-					<div class="card mt-3">
-						<div class="card-body">
-							<h6 class="d-flex align-items-center mb-3"><i class="fas fa-lock text-warning mr-2"></i>Account Status</h6>
-							<ul>
-								<li>
-									Account Non-Expired: <span th:text="${employee.accountNonExpired} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Account Non-Locked: <span th:text="${employee.accountNonLocked} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Credentials Non-Expired: <span th:text="${employee.credentialsNonExpired} ? 'Yes' : 'No'"></span>
-								</li>
-								<li>
-									Enabled: <span th:text="${employee.enabled} ? 'Yes' : 'No'"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -323,10 +266,9 @@
 
 <!-- Footer -->
 <footer th:replace="~{fragments/fragments :: sub-footer}"></footer>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap JS -->
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -44,3 +44,20 @@ INSERT INTO `customers` (
 
 INSERT INTO customers_authorities (customer_id, authority_id) VALUES (1, 4);
 INSERT INTO customers_authorities (customer_id, authority_id) VALUES (2, 4);
+
+DROP TRIGGER IF EXISTS after_session_delete;
+DELIMITER $$
+
+CREATE TRIGGER after_session_delete
+AFTER DELETE ON SPRING_SESSION
+FOR EACH ROW
+BEGIN
+    -- Convert session expiry time to match attendance timezone
+    UPDATE attendance
+    SET logout_time = FROM_UNIXTIME((OLD.LAST_ACCESS_TIME + (OLD.MAX_INACTIVE_INTERVAL * 1000)) / 1000)
+    WHERE username = OLD.PRINCIPAL_NAME
+    ORDER BY login_time DESC
+    LIMIT 1;
+END$$
+
+DELIMITER ;

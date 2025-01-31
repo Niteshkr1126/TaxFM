@@ -234,3 +234,11 @@
 .customers__table .action-icon-delete:hover {
     background: crimson;
 }
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.is-invalid + .invalid-feedback {
+    display: block;
+}

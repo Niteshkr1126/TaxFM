@@ -139,6 +139,27 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.count();
 	}
 	
+	@Override
+	public void toggleLock(Integer customerId) throws TaxFMException {
+		Customer customer = getCustomerById(customerId);
+		customer.setAccountNonLocked(!customer.getAccountNonLocked());
+		customerRepository.save(customer);
+	}
+	
+	@Override
+	public void toggleEnable(Integer customerId) throws TaxFMException {
+		Customer customer = getCustomerById(customerId);
+		customer.setEnabled(!customer.getEnabled());
+		customerRepository.save(customer);
+	}
+	
+	@Override
+	public void resetPassword(Integer customerId, String newPassword) throws TaxFMException {
+		Customer customer = getCustomerById(customerId);
+		customer.setPassword(passwordEncoder.encode(newPassword));
+		customerRepository.save(customer);
+	}
+	
 	//	@Override
 	//	public void addServiceDetail(Integer customerId, ServiceDetail serviceDetail) throws TaxFMException {
 	//		Customer customer = getCustomerById(customerId);

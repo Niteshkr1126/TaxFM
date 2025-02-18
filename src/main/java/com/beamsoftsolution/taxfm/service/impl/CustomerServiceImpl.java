@@ -1,15 +1,20 @@
 package com.beamsoftsolution.taxfm.service.impl;
 
+import com.beamsoftsolution.taxfm.constant.Constants;
 import com.beamsoftsolution.taxfm.exception.TaxFMException;
-import com.beamsoftsolution.taxfm.model.Authority;
 import com.beamsoftsolution.taxfm.model.Customer;
+import com.beamsoftsolution.taxfm.model.Role;
+import com.beamsoftsolution.taxfm.model.ServiceRate;
 import com.beamsoftsolution.taxfm.repository.CustomerRepository;
-import com.beamsoftsolution.taxfm.service.AuthorityService;
 import com.beamsoftsolution.taxfm.service.CustomerService;
+import com.beamsoftsolution.taxfm.service.RoleService;
+import com.beamsoftsolution.taxfm.service.ServiceRateService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +25,10 @@ public class CustomerServiceImpl implements CustomerService {
 	CustomerRepository customerRepository;
 	
 	@Autowired
-	AuthorityService authorityService;
+	RoleService roleService;
+	
+	@Autowired
+	ServiceRateService serviceRateService;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -32,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	public Customer getLoggedInCustomer() {
-		return customerRepository.findLoginCustomer().orElse(null);
+		return customerRepository.findLoggedInCustomer().orElse(null);
 	}
 	
 	@Override
@@ -54,9 +62,19 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public Customer addCustomer(Customer customer) {
-		customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-		return customerRepository.save(customer);
+	public Customer addCustomer(Customer customer) throws TaxFMException {
+		if(getTotalCustomersCount() < Constants.MAX_CUSTOMERS) {
+			customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+			// Add default "ROLE_CUSTOMER" role if not already present
+			Role customerRole = roleService.getRoleByRole("ROLE_CUSTOMER");
+			List<Role> roles = new ArrayList<>();
+			roles.add(customerRole);
+			customer.setRoles(roles);
+			return customerRepository.save(customer);
+		}
+		else {
+			throw new TaxFMException("max.customer.reached").withErrorCode(400);
+		}
 	}
 	
 	@Override
@@ -76,67 +94,55 @@ public class CustomerServiceImpl implements CustomerService {
 		existingCustomer.setAccountNonLocked(customer.getAccountNonLocked());
 		existingCustomer.setCredentialsNonExpired(customer.getCredentialsNonExpired());
 		existingCustomer.setEnabled(customer.getEnabled());
-		existingCustomer.setAuthorities(customer.getAuthorities());
-		
-		// Add default "CUSTOMER" authority if not already present
-		Authority customerAuthority = authorityService.getAuthorityByAuthority("CUSTOMER");
-		if(customerAuthority != null && !existingCustomer.getAuthorities().contains(customerAuthority)) {
-			existingCustomer.getAuthorities().add(customerAuthority);
-		}
-		
 		existingCustomer.setServices(customer.getServices());
 		return customerRepository.save(existingCustomer);
 	}
 	
 	@Override
-	public void updateCustomerPassword(Integer customerId, String newPassword) throws TaxFMException {
-		Customer customerInDB = getCustomerById(customerId);
-		customerInDB.setPassword(passwordEncoder.encode(newPassword));
-		customerRepository.save(customerInDB);
+	@Transactional
+	public void assignServiceRate(Integer customerId, Integer serviceId) throws TaxFMException {
+		
+		Customer customer = getCustomerById(customerId);
+		ServiceRate serviceRate = serviceRateService.getServiceRatesByServiceId(serviceId);
+		
+		// Initialize assigned services list if null
+		if(customer.getServices() == null) {
+			customer.setServices(new ArrayList<>());
+		}
+		
+		// Check if the service is already assigned
+		boolean alreadyAssigned = customer.getServices().stream()
+		                                  .anyMatch(service -> service.equals(serviceRate));
+		
+		if(!alreadyAssigned) {
+			customer.getServices().add(serviceRate);
+			customerRepository.save(customer);
+		}
 	}
 	
-	//	@Override
-	//	public void updateCustomer(Customer customer) throws TaxFMException {
-	//		Customer existingCustomer = getCustomerById(customer.getCustomerId());
-	//		existingCustomer.setCustomerName(customer.getCustomerName());
-	//		existingCustomer.setFirmName(customer.getFirmName());
-	//		existingCustomer.setAddress(customer.getAddress());
-	//		existingCustomer.setEmail(customer.getEmail());
-	//		existingCustomer.setPhoneNumber(customer.getPhoneNumber());
-	//		existingCustomer.setPan(customer.getPan());
-	//		existingCustomer.setAadharCardNumber(customer.getAadharCardNumber());
-	//		existingCustomer.setGstNumber(customer.getGstNumber());
-	//		// Ensure that the bank details are retained
-	//		List<ServiceDetail> updatedServiceDetails = customer.getServiceDetails();
-	//		if(updatedServiceDetails != null) {
-	//			for(ServiceDetail updatedServiceDetail : updatedServiceDetails) {
-	//				ServiceDetail existingServiceDetail = existingCustomer.getServiceDetails()
-	//				                                             .stream()
-	//				                                             .filter(b -> b.getBankDetailId().equals(updatedBankDetail.getBankDetailId()))
-	//				                                             .findFirst()
-	//				                                             .orElse(null);
-	//
-	//				if(existingServiceDetail != null) {
-	//					// Update bank detail fields
-	//					existingServiceDetail.setBankName(updatedServiceDetail.getBankName());
-	//					existingServiceDetail.setBranch(updatedServiceDetail.getBranch());
-	//					existingServiceDetail.setIfscCode(updatedServiceDetail.getIfscCode());
-	//					existingServiceDetail.setAccountNumber(updatedServiceDetail.getAccountNumber());
-	//					existingServiceDetail.setAccountHolderName(updatedServiceDetail.getAccountHolderName());
-	//				}
-	//			}
-	//		}
-	//		customerRepository.save(existingCustomer);
-	//	}
+	@Override
+	public void removeAssignServiceRate(Integer customerId, Integer serviceId) throws TaxFMException {
+		try {
+			Customer customer = getCustomerById(customerId);
+			ServiceRate serviceRate = serviceRateService.getServiceRatesByServiceId(serviceId);
+			
+			// Remove the service from the customer's assigned services
+			if(customer.getServices() != null) {
+				customer.getServices().removeIf(assignedService -> assignedService.equals(serviceRate));
+				customerRepository.save(customer);
+			}
+			else {
+				throw new TaxFMException("service.not.assigned").withErrorCode(404);
+			}
+		}
+		catch(Exception e) {
+			throw new TaxFMException("service.remove.failed").withErrorCode(400);
+		}
+	}
 	
 	@Override
 	public void deleteCustomerById(Integer customerId) {
 		customerRepository.deleteById(customerId);
-	}
-	
-	@Override
-	public long getTotalCustomersCount() throws TaxFMException {
-		return customerRepository.count();
 	}
 	
 	@Override
@@ -160,10 +166,8 @@ public class CustomerServiceImpl implements CustomerService {
 		customerRepository.save(customer);
 	}
 	
-	//	@Override
-	//	public void addServiceDetail(Integer customerId, ServiceDetail serviceDetail) throws TaxFMException {
-	//		Customer customer = getCustomerById(customerId);
-	//		customer.getServiceDetails().add(serviceDetail);
-	//		customerRepository.save(customer);
-	//	}
+	@Override
+	public long getTotalCustomersCount() throws TaxFMException {
+		return customerRepository.count();
+	}
 }

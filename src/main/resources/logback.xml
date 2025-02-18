@@ -21,9 +21,9 @@
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 	</appender>
-<!--	<logger name="com.zaxxer.hikari" level="DEBUG">-->
-<!--		<appender-ref ref="CONSOLE" />-->
-<!--	</logger>-->
+	<!--	<logger name="com.zaxxer.hikari" level="DEBUG">-->
+	<!--		<appender-ref ref="CONSOLE" />-->
+	<!--	</logger>-->
 	<root level="INFO">
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="FILE"/>

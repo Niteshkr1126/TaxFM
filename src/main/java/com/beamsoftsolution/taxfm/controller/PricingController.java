@@ -1,8 +1,8 @@
 package com.beamsoftsolution.taxfm.controller;
 
-import com.beamsoftsolution.taxfm.constant.Constants;
 import com.beamsoftsolution.taxfm.model.ServiceRate;
 import com.beamsoftsolution.taxfm.service.ServiceRateService;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,13 +18,14 @@ import java.util.List;
 public class PricingController {
 	
 	@Autowired
+	TaxFMUtils taxFMUtils;
+	
+	@Autowired
 	private ServiceRateService serviceRateService;
 	
 	@GetMapping
 	public String viewServiceRates(Model model) {
-		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		List<ServiceRate> rates = serviceRateService.getAllServiceRates();
 		model.addAttribute("rates", rates);
 		return "landing/pricing";

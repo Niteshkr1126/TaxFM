@@ -4,10 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableManager = new TableManager();
     const formValidator = new FormValidator();
     const fileExporter = new FileExporter();
+    const clickableRowManager = new ClickableRowManager();
 
     tableManager.init();
     formValidator.init();
     fileExporter.init();
+    clickableRowManager.init();
 });
 
 class TableManager {
@@ -217,5 +219,29 @@ class FileExporter {
         document.body.appendChild(a);
         a.click();
         a.remove();
+    }
+}
+
+class ClickableRowManager {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        // Attach event listener to the entire document to handle all tables
+        document.addEventListener('click', (event) => {
+            const row = event.target.closest('.clickable-row');
+            if (row) {
+                // Handle customers and subordinates dynamically
+                const customerId = row.getAttribute('data-customer-id');
+                const employeeId = row.getAttribute('data-employee-id');
+
+                if (customerId) {
+                    window.location.href = `/customers/${customerId}`;
+                } else if (employeeId) {
+                    window.location.href = `/employees/${employeeId}`;
+                }
+            }
+        });
     }
 }

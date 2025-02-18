@@ -120,10 +120,10 @@
 																														 th:field="*{password}" type="password"/>
 				</div>
 				<div class="form-group">
-					<label for="authorities">Authority:</label><br> <select class="form-control" id="authorities" name="authorities" required="required"
-																																	th:field="*{authorities}" multiple="multiple">
-					<option th:each="authority : ${availableAuthorities}" th:text="${authority.authority}"
-									th:value="${authority.authorityId}"></option>
+					<label for="roles">Role:</label><br> <select class="form-control" id="roles" name="roles" required="required"
+																											 th:field="*{roles}" multiple="multiple">
+					<option th:each="role : ${availableRoles}" th:text="${role.role}"
+									th:value="${role.roleId}"></option>
 				</select>
 				</div>
 				<button class="btn btn-primary" type="submit">Register Employee</button>

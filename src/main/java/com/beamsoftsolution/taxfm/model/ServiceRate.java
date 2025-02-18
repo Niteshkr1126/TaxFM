@@ -1,22 +1,21 @@
 package com.beamsoftsolution.taxfm.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "service_rates")
 public class ServiceRate {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@EqualsAndHashCode.Include
+	private Long serviceId;
 	
 	@Column(name = "service_type")
 	private String serviceType;

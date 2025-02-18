@@ -29,15 +29,7 @@
 					<div class="input-group">
 						<input type="search" id="customerSearch" placeholder="Search Customer..." oninput="filterCustomers()"> <img th:src="@{/images/common/search.png}" alt="">
 					</div>
-					<div class="export__file">
-						<label for="export-file" class="export__file-btn" title="Export File"></label> <input type="checkbox" id="export-file">
-						<div class="export__file-options">
-							<label>Export As &nbsp; &#10140;</label> <label for="export-file" id="toPDF">PDF <img th:src="@{/images/common/pdf.png}" alt=""></label>
-							<label for="export-file" id="toCSV">CSV <img th:src="@{/images/common/csv.png}" alt=""></label> <label for="export-file" id="toEXCEL">EXCEL
-							<img th:src="@{/images/common/excel.png}" alt=""></label>
-						</div>
-					</div>
-					<a th:if="${showNewCustomerAddition}" sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/add}" class="create-link">Add New Customer</a>
+					<a th:if="${showNewCustomerAddition}" sec:authorize="hasAuthority('ADD_CUSTOMER')" th:href="@{/customers/add}" class="create-link">Add New Customer</a>
 				</section>
 				<section class="customer__table__body">
 					<table>
@@ -64,8 +56,9 @@
 							<td th:text="${customer.phoneNumber}"></td>
 							<td class="action">
 								<a th:href="@{/customers/{customerId}(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a>
-								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/{customerId}/edit(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
-								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/customers/{customerId}/delete(customerId=${customer.customerId})}" onclick="return confirm('Are you sure?')"><img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('UPDATE_CUSTOMER')" th:href="@{/customers/{customerId}/edit(customerId=${customer.customerId})}"><img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
+								<a sec:authorize="hasAuthority('DELETE_CUSTOMER')" th:href="@{/customers/{customerId}/delete(customerId=${customer.customerId})}" onclick="return confirm('Are you sure?')"><img class="action-icon-delete"
+																																																																																																 th:src="@{/images/common/delete.gif}" alt=""></a>
 							</td>
 						</tr>
 						</tbody>

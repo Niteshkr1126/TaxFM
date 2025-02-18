@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface ServiceRateRepository extends JpaRepository<ServiceRate, Long> {
 	
+	ServiceRate findByServiceId(Integer serviceId);
 	List<ServiceRate> findByServiceType(String serviceType);
 	
 	List<ServiceRate> findByCategory(String category);

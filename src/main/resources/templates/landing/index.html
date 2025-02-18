@@ -38,8 +38,8 @@
 					<div class="screen__content">
 						<div class="login-type">
 							<!-- Buttons for Tabs -->
-							<button class="tab-link" th:classappend="${activeTab == 'employee-login'} ? 'active'" onclick="openTab(event, 'employee-login')">Employee Login</button>
-							<button class="tab-link" th:classappend="${activeTab == 'customer-login'} ? 'active'" onclick="openTab(event, 'customer-login')">Customer Login</button>
+							<button class="tab-link" th:classappend="${activeTab == 'employee-login'} ? 'active'" data-tab="employee-login">Employee Login</button>
+							<button class="tab-link" th:classappend="${activeTab == 'customer-login'} ? 'active'" data-tab="customer-login">Customer Login</button>
 						</div>
 						<!-- Employee Login Form (default displayed form) -->
 						<form id="employee-login" class="login" th:classappend="${activeTab == 'employee-login'} ? 'active'" method="post" th:action="@{/login}">

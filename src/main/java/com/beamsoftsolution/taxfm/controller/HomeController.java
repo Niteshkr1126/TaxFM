@@ -1,8 +1,9 @@
 package com.beamsoftsolution.taxfm.controller;
 
-import com.beamsoftsolution.taxfm.constant.Constants;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,32 +16,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class HomeController {
 	
+	@Autowired
+	TaxFMUtils taxFMUtils;
+	
 	@GetMapping
 	public String index(Model model, Authentication authentication) {
 		if(authentication != null) {
 			return "redirect:/home";
 		}
-		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("activeTab", "employee-login");
 		return "landing/index";
 	}
 	
 	@GetMapping("/login")
 	public String login(Model model, @RequestParam(value = "activeTab", defaultValue = "employee-login") String activeTab) {
-		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("activeTab", activeTab);
 		return "landing/index";
 	}
 	
 	@GetMapping(EndPoint.HOME)
 	public String home(Model model) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		return "redirect:/profile";
 	}
 	
@@ -50,9 +48,7 @@ public class HomeController {
 		if(loginErrorMessage != null) {
 			model.addAttribute("loginErrorMessage", loginErrorMessage.toString());
 		}
-		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("loginError", true);
 		String loginType = (String) httpServletRequest.getSession().getAttribute("loginType");
 		model.addAttribute("activeTab", "employee".equals(loginType) ? "employee-login" : "customer-login");
@@ -61,9 +57,7 @@ public class HomeController {
 	
 	@GetMapping("/access-denied")
 	public String accessDenied(Model model) {
-		model.addAttribute("title", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		return "landing/access-denied";
 	}
 }

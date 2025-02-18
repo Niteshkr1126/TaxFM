@@ -23,7 +23,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 	
 	@Override
-	public Authority getAuthorityById(Integer id) throws TaxFMException {
+	public Authority getAuthorityById(Long id) throws TaxFMException {
 		Optional<Authority> optionalAuthority = authorityRepository.findById(id);
 		if(optionalAuthority.isEmpty()) {
 			throw new TaxFMException("authority.not.found").withErrorCode(404);
@@ -32,8 +32,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 	
 	public Authority getAuthorityByAuthority(String authority) throws TaxFMException {
-		return authorityRepository.findByAuthority(authority)
-		                          .orElseThrow(() -> new TaxFMException("Authority '" + authority + "' not found"));
+		return authorityRepository.findByAuthority(authority).orElseThrow(() -> new TaxFMException("Authority '" + authority + "' not found"));
 	}
 	
 	@Override
@@ -45,6 +44,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	public Authority updateAuthority(Authority authority) throws TaxFMException {
 		Authority authorityInDB = getAuthorityById(authority.getAuthorityId());
 		authorityInDB.setAuthority(authority.getAuthority());
+		authorityInDB.setDescription(authority.getDescription());
 		return authorityRepository.save(authorityInDB);
 	}
 	
@@ -54,7 +54,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 	
 	@Override
-	public void deleteAuthorityById(Integer authorityId) {
+	public void deleteAuthorityById(Long authorityId) {
 		authorityRepository.deleteById(authorityId);
 	}
 }

@@ -1,3 +1,13 @@
+// Initialize application
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all components
+    const tabSwitcher = new TabSwitcher();
+    const smoothScroller = new SmoothScroller();
+    FontAwesomeLoader.load();
+    tabSwitcher.init();
+    smoothScroller.init();
+});
+
 class FontAwesomeLoader {
   static load() {
     if (!document.querySelector('script[src*="fontawesome"]')) {
@@ -23,7 +33,7 @@ class TabSwitcher {
 
   handleTabClick(event) {
     event.preventDefault();
-    const tabId = event.currentTarget.getAttribute('href').replace('#', '');
+    const tabId = event.currentTarget.dataset.tab;
 
     this.tabLinks.forEach(button => button.classList.remove('active'));
     this.loginForms.forEach(form => form.classList.remove('active'));
@@ -66,14 +76,3 @@ class SmoothScroller {
     return target.getBoundingClientRect().top + window.pageYOffset - (topBannerHeight + navBarHeight);
   }
 }
-
-class App {
-  static init() {
-    FontAwesomeLoader.load();
-    new TabSwitcher().init();
-    new SmoothScroller().init();
-  }
-}
-
-// Initialize application when DOM is ready
-document.addEventListener('DOMContentLoaded', App.init);

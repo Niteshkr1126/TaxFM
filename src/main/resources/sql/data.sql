@@ -45,3 +45,5 @@ VALUES
 ('LIC', '-', 0, NULL, 'All Turnovers', NULL, NULL, 'NA'),
 ('Mutual Funds', '-', 0, NULL, 'All Turnovers', NULL, NULL, 'NA'),
 ('Insurance', '-', 0, NULL, 'All Turnovers', NULL, NULL, 'NA');
+
+INSERT INTO customers_services (customer_id, service_id) VALUES (1, 1), (1, 2);

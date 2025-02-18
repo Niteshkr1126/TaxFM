@@ -4,10 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableManager = new TableManager();
     const formValidator = new FormValidator();
     const fileExporter = new FileExporter();
+    const clickableRowManager = new ClickableRowManager();
 
     tableManager.init();
     formValidator.init();
     fileExporter.init();
+    clickableRowManager.init();
 });
 
 class TableManager {
@@ -211,4 +213,23 @@ class FileExporter {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   }
+}
+
+class ClickableRowManager {
+    constructor() {
+        this.init();
+    }
+    init() {
+        // Attach the event listener to the table instead of tbody
+        document.querySelector('table').addEventListener('click', (event) => {
+            const row = event.target.closest('.clickable-row');
+            if (row) {
+                const serviceId = row.dataset.serviceId;
+                const customerId = row.dataset.customerId;
+                if (serviceId && customerId) {
+                    window.location.href = `/customers/${customerId}/services/${serviceId}`;
+                }
+            }
+        });
+    }
 }

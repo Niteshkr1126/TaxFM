@@ -7,17 +7,11 @@ import java.util.List;
 
 public interface AuthorityService {
 	
-	Authority getAuthorityById(Integer id) throws TaxFMException;
+	Authority getAuthorityById(Long id) throws TaxFMException;
 	Authority getAuthorityByAuthority(String authority) throws TaxFMException;
-	
 	List<Authority> getAllAuthorities();
-	
 	Authority addAuthority(Authority authority);
-	
 	Authority updateAuthority(Authority authority) throws TaxFMException;
-	
 	void deleteAuthority(Authority authority);
-	
-	void deleteAuthorityById(Integer id);
-	
+	void deleteAuthorityById(Long id);
 }

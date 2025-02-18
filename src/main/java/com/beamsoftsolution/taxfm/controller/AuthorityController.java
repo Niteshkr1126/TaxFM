@@ -1,8 +1,8 @@
 package com.beamsoftsolution.taxfm.controller;
 
-import com.beamsoftsolution.taxfm.constant.Constants;
 import com.beamsoftsolution.taxfm.model.Authority;
 import com.beamsoftsolution.taxfm.service.AuthorityService;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,15 @@ import java.util.List;
 public class AuthorityController {
 	
 	@Autowired
-	private AuthorityService authorityService;
+	AuthorityService authorityService;
+	
+	@Autowired
+	TaxFMUtils taxFMUtils;
 	
 	@GetMapping
 	public String getAllAuthorities(Model model, Authentication authentication) {
 		if(authentication != null) {
-			model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-			model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-			model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+			taxFMUtils.setCompanyAttributes(model);
 			List<Authority> authorities = authorityService.getAllAuthorities();
 			model.addAttribute("authorities", authorities);
 			return "authorities/authorities";

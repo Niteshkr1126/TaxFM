@@ -1,11 +1,11 @@
 package com.beamsoftsolution.taxfm.controller;
 
-import com.beamsoftsolution.taxfm.constant.Constants;
+import com.beamsoftsolution.taxfm.exception.TaxFMException;
 import com.beamsoftsolution.taxfm.model.Customer;
 import com.beamsoftsolution.taxfm.model.Employee;
 import com.beamsoftsolution.taxfm.service.CustomerService;
 import com.beamsoftsolution.taxfm.service.EmployeeService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,44 +26,50 @@ public class ProfileController {
 	@Autowired
 	CustomerService customerService;
 	
+	@Autowired
+	TaxFMUtils taxFMUtils;
+	
 	@GetMapping
-	public String getProfile(HttpServletRequest httpServletRequest, Model model, Authentication authentication) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		
+	public String getProfile(Model model, Authentication authentication) throws TaxFMException {
+		taxFMUtils.setCompanyAttributes(model);
 		if(authentication == null || !authentication.isAuthenticated()) {
-			// Handle unauthenticated user. Redirect to login or show a default page.
 			return "redirect:/login";
 		}
 		
 		boolean isCustomer = authentication.getAuthorities().stream()
 		                                   .map(GrantedAuthority::getAuthority)
-		                                   .anyMatch("CUSTOMER"::equals);
+		                                   .anyMatch("ROLE_CUSTOMER"::equals);
 		
 		if(!isCustomer) {
-			Employee employee = employeeService.getLoggedInEmployee();
-			if(employee != null) {
-				model.addAttribute("employee", employee);
-				model.addAttribute("loggedInEmployeeId", employee.getEmployeeId());
+			Employee loggedInEmployee = employeeService.getLoggedInEmployee();
+			if(loggedInEmployee != null) {
+				Integer loggedInEmployeeId = loggedInEmployee.getEmployeeId();
+				loggedInEmployee.setSupervisor(employeeService.getSupervisor(loggedInEmployeeId));
+				loggedInEmployee.setSubordinates(employeeService.getSubordinates(loggedInEmployeeId));
+				loggedInEmployee.setAssignedCustomers(employeeService.getLoggedInEmployee().getAssignedCustomers());
+				model.addAttribute("employee", loggedInEmployee);
+				model.addAttribute("loggedInEmployeeId", loggedInEmployeeId);
 				return "/home/employee-profile";
 			}
 			else {
 				// Handle the case where getLoggedInEmployee() returns null. This is important!
 				// Log the error, redirect, or show an error page.
-				// Example:
-				log.error("Employee not found after successful authentication!"); // Assuming you have a logger
-				return "redirect:/login-error"; // Or a specific error page
+				log.error("Employee not found after successful authentication!");
+				return "redirect:/login-error";
 			}
 		}
 		else {
-			Customer customer = customerService.getLoggedInCustomer();
-			if(customer != null) {
-				model.addAttribute("customer", customer);
+			Customer loggedInCustomer = customerService.getLoggedInCustomer();
+			if(loggedInCustomer != null) {
+				Integer loggedInCustomerId = loggedInCustomer.getCustomerId();
+				loggedInCustomer.setServices(customerService.getLoggedInCustomer().getServices());
+				model.addAttribute("customer", loggedInCustomer);
+				model.addAttribute("loggedInCustomerId", loggedInCustomerId);
 				return "/home/customer-profile";
 			}
 			else {
-				// Handle the case where getLoggedInCustomer() returns null
+				// Handle the case where getLoggedInCustomer() returns null. This is important!
+				// Log the error, redirect, or show an error page.
 				log.error("Customer not found after successful authentication!");
 				return "redirect:/login-error";
 			}

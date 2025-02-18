@@ -1,7 +1,109 @@
-INSERT INTO `authorities` (`authority_id`, `authority`) VALUES (1,'ADMIN');
-INSERT INTO `authorities` (`authority_id`, `authority`) VALUES (2,'SENIOR');
-INSERT INTO `authorities` (`authority_id`, `authority`) VALUES (3,'JUNIOR');
-INSERT INTO `authorities` (`authority_id`, `authority`) VALUES (4,'CUSTOMER');
+use TaxFM;
+-- Insert Authorities
+INSERT INTO authorities (authority_id, authority, description) VALUES
+(1, 'ADD_EMPLOYEE', 'Add new employee'),
+(2, 'VIEW_ALL_EMPLOYEES', 'View all employees'),
+(3, 'VIEW_EMPLOYEE', 'View employee details'),
+(4, 'UPDATE_EMPLOYEE', 'Edit employee details'),
+(5, 'DELETE_EMPLOYEE', 'Delete an employee'),
+(6, 'ASSIGN_SUBORDINATE', 'Assign subordinates to an employee'),
+(7, 'VIEW_ASSIGNED_SUBORDINATES', 'View assigned subordinates'),
+(8, 'VIEW_SUBORDINATE', 'View assigned subordinates'),
+(9, 'REMOVE_ASSIGNED_SUBORDINATE', 'Remove assigned subordinate'),
+(10, 'ADD_CUSTOMER', 'Add new customer'),
+(11, 'VIEW_ALL_CUSTOMERS', 'View all customers'),
+(12, 'VIEW_CUSTOMER', 'View customer details'),
+(13, 'UPDATE_CUSTOMER', 'Edit customer details'),
+(14, 'DELETE_CUSTOMER', 'Delete a customer'),
+(15, 'ASSIGN_CUSTOMER', 'Assign customers to employees'),
+(16, 'VIEW_ASSIGNED_CUSTOMERS', 'View customers assigned to an employee'),
+(17, 'REMOVE_ASSIGNED_CUSTOMER', 'Remove assigned customer'),
+(18, 'VIEW_ASSIGNED_SERVICES', 'View services assigned to customers'),
+(19, 'VIEW_SERVICE', 'View details of a specific service'),
+(20, 'UPDATE_SERVICE', 'Edit details of a specific service'),
+(21, 'DELETE_SERVICE', 'Delete a specific service'),
+(22, 'ASSIGN_SERVICE', 'Assign services to customers'),
+(23, 'REMOVE_ASSIGNED_SERVICE', 'Remove assigned service'),
+(24, 'VIEW_PROFILE', 'View own profile'),
+(25, 'RESET_PASSWORD', 'Reset own password'),
+(26, 'LOCK_UNLOCK_ACCOUNT', 'Lock or unlock accounts'),
+(27, 'VIEW_AGREEMENT', 'View employee agreements'),
+(28, 'ENABLE_DISABLE_ACCOUNT', 'Enable or disable accounts');
+
+INSERT INTO roles (role_id, description, role) VALUES
+(1, 'Administrator Employee', 'ROLE_ADMIN'),
+(2, 'Senior Accountant Employee', 'ROLE_SENIOR_ACCOUNTANT'),
+(3, 'Accountant Employee', 'ROLE_ACCOUNTANT'),
+(4, 'Customer', 'ROLE_CUSTOMER');
+
+-- ROLE_ADMIN Assignments
+INSERT INTO roles_authorities (role_id, authority_id) VALUES
+(1, 1),  -- ADD_EMPLOYEE
+(1, 2),  -- VIEW_ALL_EMPLOYEES
+(1, 3),  -- VIEW_EMPLOYEE
+(1, 4),  -- UPDATE_EMPLOYEE
+(1, 5),  -- DELETE_EMPLOYEE
+(1, 6),  -- ASSIGN_SUBORDINATE
+(1, 7),  -- VIEW_ASSIGNED_SUBORDINATES
+(1, 8),  -- VIEW_SUBORDINATE
+(1, 9),  -- REMOVE_ASSIGNED_SUBORDINATE
+(1, 10), -- ADD_CUSTOMER
+(1, 11), -- VIEW_ALL_CUSTOMERS
+(1, 12), -- VIEW_CUSTOMER
+(1, 13), -- UPDATE_CUSTOMER
+(1, 14), -- DELETE_CUSTOMER
+(1, 15), -- ASSIGN_CUSTOMER
+(1, 16), -- VIEW_ASSIGNED_CUSTOMERS
+(1, 17), -- REMOVE_ASSIGNED_CUSTOMER
+(1, 18), -- VIEW_ASSIGNED_SERVICES
+(1, 19), -- VIEW_SERVICE
+(1, 20), -- UPDATE_SERVICE
+(1, 21), -- DELETE_SERVICE
+(1, 22), -- ASSIGN_SERVICE
+(1, 23), -- REMOVE_ASSIGNED_SERVICE
+(1, 24), -- VIEW_PROFILE
+(1, 25), -- RESET_PASSWORD
+(1, 26), -- LOCK_UNLOCK_ACCOUNT
+(1, 27), -- VIEW_AGREEMENT
+(1, 28); -- ENABLE_DISABLE_ACCOUNT
+
+
+-- ROLE_SENIOR_ACCOUNTANT Assignments
+INSERT INTO roles_authorities (role_id, authority_id) VALUES
+(2, 6),  -- ASSIGN_SUBORDINATE
+(2, 7),  -- VIEW_ASSIGNED_SUBORDINATES
+(2, 8),  -- VIEW_SUBORDINATE
+(2, 9),  -- REMOVE_ASSIGNED_SUBORDINATE
+(2, 12), -- VIEW_CUSTOMER
+(2, 15), -- ASSIGN_CUSTOMER
+(2, 16), -- VIEW_ASSIGNED_CUSTOMERS
+(2, 17), -- REMOVE_ASSIGNED_CUSTOMER
+(2, 18), -- VIEW_ASSIGNED_SERVICES
+(2, 19), -- VIEW_SERVICE
+(2, 24), -- VIEW_PROFILE
+(2, 25), -- RESET_PASSWORD
+(2, 27); -- VIEW_AGREEMENT
+
+
+-- ROLE_ACCOUNTANT Assignments
+INSERT INTO roles_authorities (role_id, authority_id) VALUES
+(3, 12), -- VIEW_CUSTOMER
+(3, 16), -- VIEW_ASSIGNED_CUSTOMERS
+(3, 18), -- VIEW_ASSIGNED_SERVICES
+(3, 19), -- VIEW_SERVICE
+(3, 24), -- VIEW_PROFILE
+(3, 25), -- RESET_PASSWORD
+(3, 27); -- VIEW_AGREEMENT
+
+-- ROLE_CUSTOMER Assignments
+INSERT INTO roles_authorities (role_id, authority_id) VALUES
+(4, 12), -- VIEW_CUSTOMER
+(4, 16), -- VIEW_ASSIGNED_CUSTOMERS
+(4, 18), -- VIEW_ASSIGNED_SERVICES
+(4, 19), -- VIEW_SERVICE
+(4, 24), -- VIEW_PROFILE
+(4, 25), -- RESET_PASSWORD
+(4, 27); -- VIEW_AGREEMENT
 
 INSERT INTO `employees` (
     `employee_id`, `username`, `first_name`, `last_name`, `designation`, `email`,
@@ -21,14 +123,14 @@ INSERT INTO `employees` (
  '9852280992', '2025-01-22', 'MALE', 'SINGLE', 'BLOCK C, SECTOR 22, CITY CENTER', '23123FSDFW',
  513762538621, 'Agreement',
  '$2a$10$qVGbCW3weEHGV2ar4gEuOeuJUk/Tz919J2nmTMO2sxDyJeST0.Q5G', 1, 1, 1, 1),
- (4, 'junior1', 'JUNIOR1', 'KUMARI', 'JUNIOR', 'JUNIOR1@GMAIL.COM',
+(4, 'junior1', 'JUNIOR1', 'KUMARI', 'JUNIOR', 'JUNIOR1@GMAIL.COM',
   '6127182782', '2025-01-03', 'FEMALE', 'MARRIED', 'BARI ROAD', 'ABCDE2345G',
   2163872169, 'Agreement', '$2a$10$C/4ZqCu8kQxyHfyry6T6teZjy.Vg6G6ZPoR5dEMyIuSqk0k42GPeK', 1, 1, 1, 1);
 
-INSERT INTO employees_authorities (employee_id, authority_id) VALUES (1, 1);
-INSERT INTO employees_authorities (employee_id, authority_id) VALUES (2, 2);
-INSERT INTO employees_authorities (employee_id, authority_id) VALUES (3, 3);
-INSERT INTO employees_authorities (employee_id, authority_id) VALUES (4, 3);
+INSERT INTO employees_roles (employee_id, role_id) VALUES (1, 1);
+INSERT INTO employees_roles (employee_id, role_id) VALUES (2, 2);
+INSERT INTO employees_roles (employee_id, role_id) VALUES (3, 3);
+INSERT INTO employees_roles (employee_id, role_id) VALUES (4, 3);
 
 INSERT INTO `customers` (
     `customer_id`, `username`, `first_name`, `last_name`, `firm_name`, `address`,
@@ -42,8 +144,8 @@ INSERT INTO `customers` (
  'CUSTOMER1@GMAIL.COM', '9876325637', 'ASDFW1234D', 361782461824, '218y8udsjkad7812',
  '$2a$10$nIHd9mpEUh7zQNZ7SjMjhu8MLnOYB3ZvRgGQHIlg7je4NZXjT2hDO', 1, 1, 1, 1);
 
-INSERT INTO customers_authorities (customer_id, authority_id) VALUES (1, 4);
-INSERT INTO customers_authorities (customer_id, authority_id) VALUES (2, 4);
+INSERT INTO customers_roles (customer_id, role_id) VALUES (1, 4);
+INSERT INTO customers_roles (customer_id, role_id) VALUES (2, 4);
 
 DROP TRIGGER IF EXISTS after_session_delete;
 DELIMITER $$
@@ -68,3 +170,21 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+UPDATE employees SET supervisor_id = 1 WHERE employee_id = 2;
+UPDATE employees SET supervisor_id = 2 WHERE employee_id = 3;
+UPDATE employees SET supervisor_id = 2 WHERE employee_id = 4;
+
+
+INSERT INTO employees_customers (employee_id, customer_id) VALUES (2, 1), (3, 2);
+
+
+
+INSERT INTO `customers` (
+    `customer_id`, `username`, `first_name`, `last_name`, `firm_name`, `address`,
+    `email`, `phone_number`, `pan`, `aadhar_card_number`, `gst_number`, `password`,
+    `account_non_expired`, `account_non_locked`, `credentials_non_expired`, `enabled`
+) VALUES
+(3, 'customer3', 'CUSTOMER', 'KUMAR', 'JOHN ENTERPRISES', '123 CUSTOMER LANE',
+ 'CUSTOMER@GMAIL.COM', '9876543220', 'ABCDE5672Z', 218921879291872, 'GST9826543X',
+ '$2a$10$wUO.OGdgDawpMXdRUIwKKe7kAuoSLVQw6BBfu772erbWF1KBXkFIe', 1, 1, 1, 1);

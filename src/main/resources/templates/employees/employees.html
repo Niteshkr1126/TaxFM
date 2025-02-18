@@ -29,15 +29,7 @@
 					<div class="input-group">
 						<input type="search" id="employeeSearch" placeholder="Search Employee..." oninput="filterEmployees()"> <img th:src="@{/images/common/search.png}" alt="">
 					</div>
-					<div class="export__file">
-						<label for="export-file" class="export__file-btn" title="Export File"></label> <input type="checkbox" id="export-file">
-						<div class="export__file-options">
-							<label>Export As &nbsp; &#10140;</label> <label for="export-file" id="toPDF">PDF <img th:src="@{/images/common/pdf.png}" alt=""></label>
-							<label for="export-file" id="toCSV">CSV <img th:src="@{/images/common/csv.png}" alt=""></label> <label for="export-file" id="toEXCEL">EXCEL
-							<img th:src="@{/images/common/excel.png}" alt=""></label>
-						</div>
-					</div>
-					<a th:if="${showNewEmployeeAddition}" sec:authorize="hasAuthority('ADMIN')" th:href="@{/employees/add}" class="create-link">Add New Employee</a>
+					<a th:if="${showNewEmployeeAddition}" sec:authorize="hasAuthority('ADD_EMPLOYEE')" th:href="@{/employees/add}" class="create-link">Add New Employee</a>
 				</section>
 				<section class="table__body">
 					<table>
@@ -48,7 +40,7 @@
 							<th>Last Name <span class="icon-arrow">&UpArrow;</span></th>
 							<th>Email <span class="icon-arrow">&UpArrow;</span></th>
 							<th>Phone Number <span class="icon-arrow">&UpArrow;</span></th>
-							<th>Authorities <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Roles <span class="icon-arrow">&UpArrow;</span></th>
 							<th>Action</th>
 						</tr>
 						</thead>
@@ -58,39 +50,19 @@
 							<td th:text="${employee.lastName}"></td>
 							<td th:text="${employee.email}"></td>
 							<td th:text="${employee.phoneNumber}"></td>
-							<td th:text="${#strings.arrayJoin(employee.authorities.![authority], ', ')}"></td>
+							<td th:text="${#strings.listJoin(employee.roles.![#strings.substringAfter(role, 'ROLE_')], ', ')}"></td>
 							<td class="action">
+								<!-- View Action -->
 								<a th:href="@{/employees/{employeeId}(employeeId=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a>
-								<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/employees/{id}/edit(id=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
-								<a sec:authorize="hasAuthority('ADMIN')" th:if="${employee.employeeId != loggedInEmployeeId}" th:href="@{/employees/{id}/delete(id=${employee.employeeId})}" onclick="return confirm('Are you sure?')">
+								<!-- Edit Action, restricted to EMPLOYEE_EDIT authority -->
+								<a sec:authorize="hasAuthority('UPDATE_EMPLOYEE')" th:href="@{/employees/{id}/edit(id=${employee.employeeId})}"> <img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
+								<!-- Delete Action, restricted to EMPLOYEE_DELETE authority and not for the logged-in employee -->
+								<a sec:authorize="hasAuthority('DELETE_EMPLOYEE')" th:if="${employee.employeeId != loggedInEmployeeId}" th:href="@{/employees/{id}/delete(id=${employee.employeeId})}" onclick="return confirm('Are you sure?')">
 									<img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt="">
 								</a>
 							</td>
 						</tr>
 					</table>
-					<!--					&lt;!&ndash; Pagination &ndash;&gt;-->
-					<!--					<div th:if="${employees.totalPages > 1}">-->
-					<!--						<nav>-->
-					<!--							<ul class="employees-pagination">-->
-					<!--								<li th:if="${employees.number > 0}">-->
-					<!--									<a th:href="@{/employees(page=0)}">First</a>-->
-					<!--								</li>-->
-					<!--								<li th:if="${employees.number > 0}">-->
-					<!--									<a th:href="@{/employees(page=${employees.number - 1})}">Previous</a>-->
-					<!--								</li>-->
-					<!--								<li th:each="i : ${#numbers.sequence(0, employees.totalPages - 1)}">-->
-					<!--									<a th:if="${employees.number == i}" th:text="${i + 1}" href="#"></a>-->
-					<!--									<a th:unless="${employees.number == i}" th:href="@{/employees(page=${i})}" th:text="${i + 1}"></a>-->
-					<!--								</li>-->
-					<!--								<li th:if="${employees.number + 1 < employees.totalPages}">-->
-					<!--									<a th:href="@{/employees(page=${employees.number + 1})}">Next</a>-->
-					<!--								</li>-->
-					<!--								<li th:if="${employees.number + 1 < employees.totalPages}">-->
-					<!--									<a th:href="@{/employees(page=${employees.totalPages - 1})}">Last</a>-->
-					<!--								</li>-->
-					<!--							</ul>-->
-					<!--						</nav>-->
-					<!--					</div>-->
 				</section>
 			</div>
 		</div>

@@ -1,8 +1,12 @@
 package com.beamsoftsolution.taxfm.model;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -14,13 +18,19 @@ public class Authority {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer authorityId;
+	private Long authorityId;
 	
-	@NonNull
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 50)
 	private String authority;
 	
+	private String description;
+	
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		}
+		catch(JsonProcessingException e) {
+			return "Error converting Authority to JSON: " + e.getMessage();
+		}
 	}
 }

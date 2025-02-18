@@ -1,7 +1,8 @@
 package com.beamsoftsolution.taxfm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "employees")
 public class Employee {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include
 	private Integer employeeId;
 	
 	@NonNull
@@ -59,21 +62,14 @@ public class Employee {
 	@JsonIgnore
 	private String password;
 	
-	@Singular("authority")
+	@Singular("role")
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-	@JoinTable(name = "employees_authorities", joinColumns = {
-			@JoinColumn(name = "employeeId", referencedColumnName = "employeeId") }, inverseJoinColumns = {
-			@JoinColumn(name = "authorityId", referencedColumnName = "authorityId") })
-	private List<Authority> authorities;
-	
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
-			name = "employees_customers",
+			name = "employees_roles",
 			joinColumns = { @JoinColumn(name = "employeeId", referencedColumnName = "employeeId") },
-			inverseJoinColumns = { @JoinColumn(name = "customerId", referencedColumnName = "customerId") },
-			uniqueConstraints = { @UniqueConstraint(columnNames = { "employeeId", "customerId" }) }
+			inverseJoinColumns = { @JoinColumn(name = "roleId", referencedColumnName = "roleId") }
 	)
-	private List<Customer> assignedCustomers;
+	private List<Role> roles;
 	
 	// Owning side (foreign key in DB)
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -86,6 +82,15 @@ public class Employee {
 	@JsonIgnore
 	@Builder.Default
 	private List<Employee> subordinates = new ArrayList<>();
+	
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "employees_customers",
+			joinColumns = { @JoinColumn(name = "employeeId", referencedColumnName = "employeeId") },
+			inverseJoinColumns = { @JoinColumn(name = "customerId", referencedColumnName = "customerId") },
+			uniqueConstraints = { @UniqueConstraint(columnNames = { "employeeId", "customerId" }) }
+	)
+	private List<Customer> assignedCustomers;
 	
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
@@ -104,6 +109,11 @@ public class Employee {
 	private Boolean enabled = true;
 	
 	public String toString() {
-		return new Gson().toJson(this);
+		try {
+			return new ObjectMapper().writeValueAsString(this);
+		}
+		catch(JsonProcessingException e) {
+			return "Error converting Employee to JSON: " + e.getMessage();
+		}
 	}
 }

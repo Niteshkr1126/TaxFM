@@ -4,20 +4,22 @@ import com.beamsoftsolution.taxfm.constant.Constants;
 import com.beamsoftsolution.taxfm.exception.TaxFMException;
 import com.beamsoftsolution.taxfm.model.Customer;
 import com.beamsoftsolution.taxfm.model.Employee;
+import com.beamsoftsolution.taxfm.model.ServiceRate;
 import com.beamsoftsolution.taxfm.service.CustomerService;
 import com.beamsoftsolution.taxfm.service.EmployeeService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.beamsoftsolution.taxfm.service.ServiceRateService;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Controller
 @Slf4j
@@ -30,103 +32,109 @@ public class CustomerController {
 	@Autowired
 	CustomerService customerService;
 	
+	@Autowired
+	ServiceRateService serviceRateService;
+	
+	@Autowired
+	TaxFMUtils taxFMUtils;
+	
 	@GetMapping
-	@PreAuthorize("hasAnyAuthority('ADMIN', 'SENIOR')")
+	@PreAuthorize("hasAnyAuthority('VIEW_ALL_CUSTOMERS', 'VIEW_ASSIGNED_CUSTOMERS')")
 	public String getAllCustomers(Model model) throws TaxFMException {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		
 		// Fetch the logged-in employee
 		Employee loggedInEmployee = employeeService.getLoggedInEmployee();
 		Integer loggedInEmployeeId = loggedInEmployee.getEmployeeId();
+		loggedInEmployee.setAssignedCustomers(employeeService.getLoggedInEmployee().getAssignedCustomers());
 		model.addAttribute("loggedInEmployeeId", loggedInEmployeeId);
 		
-		// Determine role-based visibility
+		Set<String> loggedInAuthorities = taxFMUtils.getEmployeeAuthorities(loggedInEmployee);
 		List<Customer> customers;
-		if(loggedInEmployee.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
-			// If the user is an ADMIN, fetch all customers
+		boolean showNewCustomerAddition = false;
+		
+		if(loggedInAuthorities.contains("VIEW_ALL_CUSTOMERS")) {
 			customers = customerService.getAllCustomers();
 			// Add logic for displaying the "New Customer Addition" button
-			long totalUsersCount = customerService.getTotalCustomersCount();
-			model.addAttribute("showNewCustomerAddition", totalUsersCount < Constants.MAX_CUSTOMERS);
+			long totalCustomersCount = customerService.getTotalCustomersCount();
+			showNewCustomerAddition = totalCustomersCount < Constants.MAX_CUSTOMERS;
 		}
-		else if(loggedInEmployee.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("SENIOR")) || loggedInEmployee.getAuthorities().stream().anyMatch(
-				auth -> auth.getAuthority().equals("JUNIOR"))) {
-			// If the user is either a SENIOR or JUNIOR, fetch only their assigned customers
-			customers = loggedInEmployee.getAssignedCustomers().stream().toList();
-			model.addAttribute("showNewCustomerAddition", false);
+		else if(loggedInAuthorities.contains("VIEW_ASSIGNED_CUSTOMERS")) {
+			customers = loggedInEmployee.getAssignedCustomers();
 		}
 		else {
 			return "redirect:/access-denied";
 		}
 		model.addAttribute("customers", customers);
+		model.addAttribute("showNewCustomerAddition", showNewCustomerAddition);
 		return "customers/customers";
 	}
 	
 	@GetMapping("/{customerId}")
+	@PreAuthorize("hasAnyAuthority('VIEW_ALL_CUSTOMERS', 'VIEW_ASSIGNED_CUSTOMERS')")
 	public String viewCustomer(@PathVariable Integer customerId, Model model) throws TaxFMException {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+		taxFMUtils.setCompanyAttributes(model);
 		
 		// Fetch the logged-in employee
 		Employee loggedInEmployee = employeeService.getLoggedInEmployee();
-		Integer loggedInEmployeeId = loggedInEmployee.getEmployeeId();
-		model.addAttribute("loggedInEmployeeId", loggedInEmployeeId);
+		loggedInEmployee.setAssignedCustomers(employeeService.getLoggedInEmployee().getAssignedCustomers());
+		Set<String> loggedInAuthorities = taxFMUtils.getEmployeeAuthorities(loggedInEmployee);
 		
-		boolean isAdmin = loggedInEmployee.getAuthorities().stream()
-		                                  .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
-		
-		// Check if the logged-in employee has access
-		boolean hasAccess = isAdmin || loggedInEmployee.getAssignedCustomers().stream().anyMatch(customer -> customer.getCustomerId().equals(customerId));
-		
-		if(!hasAccess) {
-			return "redirect:/access-denied";
+		// Fetch the requested customer
+		Customer customer = customerService.getCustomerById(customerId);
+		if(customer == null) {
+			return "redirect:/access-denied"; // Prevents null reference issues
 		}
 		
-		model.addAttribute("customer", customerService.getCustomerById(customerId));
-		return "customers/customer";
+		// Check if the customer is assigned to the loggedInEmployee
+		boolean isAssignedCustomer = loggedInEmployee.getAssignedCustomers().stream()
+		                                             .anyMatch(cust -> cust.getCustomerId().equals(customer.getCustomerId()));
+		
+		// Check access permissions
+		if(loggedInAuthorities.contains("VIEW_ALL_CUSTOMERS") ||
+				(loggedInAuthorities.contains("VIEW_ASSIGNED_CUSTOMERS") && isAssignedCustomer)) {
+			// Get the list of services for the dropdown
+			List<ServiceRate> services = serviceRateService.getAllServiceRates();
+			model.addAttribute("availableServices", services);
+			model.addAttribute("customer", customer);
+			return "customers/customer";
+		}
+		return "redirect:/access-denied";
 	}
 	
 	@GetMapping("/add")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String showCustomerForm(Model model) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+	@PreAuthorize("hasAuthority('ADD_CUSTOMER')")
+	public String showAddCustomer(Model model) {
+		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("customer", new Customer());
 		return "customers/addCustomer";
 	}
 	
 	@PostMapping("/add")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADD_CUSTOMER')")
 	public String addCustomer(Customer customer, Errors errors) throws TaxFMException {
 		if(errors != null && errors.getErrorCount() > 0) {
 			errors.getAllErrors().forEach(a -> log.info(a.getDefaultMessage()));
 			return "customers/addCustomer";
 		}
 		else {
-			log.info(customer.toString());
 			Customer addedCustomer = customerService.addCustomer(customer);
 			return "redirect:/customers/" + addedCustomer.getCustomerId();
 		}
 	}
 	
 	@GetMapping("/{customerId}/edit")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String editCustomerForm(@PathVariable Integer customerId, Model model) throws TaxFMException {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
+	@PreAuthorize("hasAuthority('UPDATE_CUSTOMER')")
+	public String updateCustomer(@PathVariable Integer customerId, Model model) throws TaxFMException {
+		taxFMUtils.setCompanyAttributes(model);
 		Customer customer = customerService.getCustomerById(customerId);
 		model.addAttribute("customer", customer);
 		return "customers/editCustomer";
 	}
 	
 	@PostMapping("/{customerId}/edit")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String editCustomer(Customer customer, Errors errors) throws TaxFMException {
+	@PreAuthorize("hasAuthority('UPDATE_CUSTOMER')")
+	public String updateCustomer(Customer customer, Errors errors) throws TaxFMException {
 		if(errors != null && errors.getErrorCount() > 0) {
 			errors.getAllErrors().forEach(a -> log.info(a.getDefaultMessage()));
 			return "customers/editCustomer";
@@ -137,83 +145,36 @@ public class CustomerController {
 		}
 	}
 	
-	@PostMapping(value = "/{customerId}/edit", params = { "addServiceDetail" })
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String addServiceDetailInEdit(Customer customer, Model model) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		//		if(customer != null) {
-		//			if(customer.getServiceDetails() == null) {
-		//				List<ServiceDetail> serviceDetails = new ArrayList<>();
-		//				serviceDetails.add(new ServiceDetail());
-		//				customer.setServiceDetails(serviceDetails);
-		//			}
-		//			else {
-		//				customer.getServiceDetails().add(new ServiceDetail());
-		//			}
-		//		}
-		return "customers/editCustomer";
+	@PostMapping(value = "/{customerId}/assign-service")
+	@PreAuthorize("hasAuthority('ASSIGN_SERVICE')")
+	public String assignServiceRate(@PathVariable Integer customerId, @RequestParam Integer serviceId) throws TaxFMException {
+		customerService.assignServiceRate(customerId, serviceId);
+		return "redirect:/customers/" + customerId;
 	}
 	
-	@PostMapping(value = "/{customerId}/edit", params = { "removeServiceDetail" })
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String removeServiceDetailInEdit(Customer customer, Model model, HttpServletRequest request) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		//		ServiceDetail removeServiceDetail = customer.getServiceDetails().remove(Integer.parseInt(request.getParameter("removeServiceDetail")));
-		//		if(removeServiceDetail.getServiceDetailId() != null) {
-		//			serviceDetailService.deleteServiceDetailById(removeServiceDetail.getServiceDetailId());
-		//		}
-		return "customers/editCustomer";
-	}
-	
-	@PostMapping(value = "/add", params = { "addServiceDetail" })
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String addServiceDetail(Customer customer, Model model, BindingResult bindingResult) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		//		if(customer != null) {
-		//			if(customer.getServiceDetails() == null) {
-		//				List<ServiceDetail> serviceDetails = new ArrayList<>();
-		//				serviceDetails.add(new ServiceDetail());
-		//				customer.setServiceDetails(serviceDetails);
-		//			}
-		//			else {
-		//				customer.getServiceDetails().add(new ServiceDetail());
-		//			}
-		//		}
-		return "customers/addCustomer";
-	}
-	
-	@PostMapping(value = "/add", params = { "removeServiceDetail" })
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String removeServiceDetail(Customer customer, Model model, BindingResult bindingResult, HttpServletRequest request) {
-		model.addAttribute("title", Constants.SHORT_COMPANY_NAME);
-		model.addAttribute("topBannerCompanyName", Constants.COMPANY_NAME);
-		model.addAttribute("footerCompanyName", Constants.APPLICATION_COMPANY_NAME);
-		//		customer.getServiceDetails().remove(Integer.parseInt(request.getParameter("removeServiceDetail")));
-		return "customers/addCustomer";
+	@PostMapping(value = "/{customerId}/services/{serviceId}/remove-service")
+	@PreAuthorize("hasAuthority('REMOVE_ASSIGNED_SERVICE')")
+	public String removeAssignedServiceRate(@PathVariable Integer customerId, @PathVariable Integer serviceId) throws TaxFMException {
+		customerService.removeAssignServiceRate(customerId, serviceId);
+		return "redirect:/customers/" + customerId;
 	}
 	
 	@PostMapping("/{customerId}/toggle-lock")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('LOCK_UNLOCK_ACCOUNT')")
 	public String toggleLock(@PathVariable Integer customerId) throws TaxFMException {
 		customerService.toggleLock(customerId);
 		return "redirect:/customers/" + customerId;
 	}
 	
 	@PostMapping("/{customerId}/toggle-enable")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ENABLE_DISABLE_ACCOUNT')")
 	public String toggleEnable(@PathVariable Integer customerId) throws TaxFMException {
 		customerService.toggleEnable(customerId);
 		return "redirect:/customers/" + customerId;
 	}
 	
 	@PostMapping("/{customerId}/reset-password")
-	@PreAuthorize("hasAuthority('CUSTOMER')")
+	@PreAuthorize("hasAuthority('RESET_PASSWORD')")
 	public String resetPassword(@PathVariable Integer customerId, @RequestParam String newPassword) throws TaxFMException {
 		Integer loggedInEmployeeId = customerService.getLoggedInCustomer().getCustomerId();
 		if(Objects.equals(loggedInEmployeeId, customerId)) {
@@ -224,7 +185,7 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/{customerId}/delete")
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('DELETE_CUSTOMER')")
 	public String deleteCustomer(@PathVariable Integer customerId) throws TaxFMException {
 		customerService.deleteCustomerById(customerId);
 		return "redirect:/customers";

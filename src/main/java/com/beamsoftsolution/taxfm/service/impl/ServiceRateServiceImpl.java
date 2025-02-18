@@ -22,6 +22,11 @@ public class ServiceRateServiceImpl implements ServiceRateService {
 	}
 	
 	@Override
+	public ServiceRate getServiceRatesByServiceId(Integer serviceId) {
+		return serviceRateRepository.findByServiceId(serviceId);
+	}
+	
+	@Override
 	public List<ServiceRate> getServiceRatesByType(String serviceType) {
 		return serviceRateRepository.findByServiceType(serviceType);
 	}

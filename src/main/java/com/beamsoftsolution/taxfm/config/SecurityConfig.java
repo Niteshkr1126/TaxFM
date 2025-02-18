@@ -53,27 +53,26 @@ public class SecurityConfig {
 					
 					// Publicly accessible routes
 					authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
-					authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "/access-denied")
-					          .permitAll();
+					authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "/access-denied").permitAll();
 					authConfig.requestMatchers(HttpMethod.POST, "/", "/login-error", "/error", "/logout").permitAll();
 					
 					// Routes for all authenticated users
-					authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR", "CUSTOMER");
+					authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT", "CUSTOMER");
 					
 					// Reset Password Routes
-					authConfig.requestMatchers(HttpMethod.POST, "/employees/{employeeId}/reset-password").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
-					authConfig.requestMatchers(HttpMethod.POST, "/customers/{customerId}/reset-password").hasAuthority("CUSTOMER");
+					authConfig.requestMatchers(HttpMethod.POST, "/employees/{employeeId}/reset-password").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");
+					authConfig.requestMatchers(HttpMethod.POST, "/customers/{customerId}/reset-password").hasRole("CUSTOMER");
 					
 					// Employee routes
-					authConfig.requestMatchers(HttpMethod.GET, "/employees/**").hasAnyAuthority("ADMIN", "SENIOR");
-					authConfig.requestMatchers(HttpMethod.POST, "/employees/**").hasAnyAuthority("ADMIN", "SENIOR");
+					authConfig.requestMatchers(HttpMethod.GET, "/employees/**").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT");
+					authConfig.requestMatchers(HttpMethod.POST, "/employees/**").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT");
 					
 					// Customer routes
-					authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
-					authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyAuthority("ADMIN", "SENIOR", "JUNIOR");
+					authConfig.requestMatchers(HttpMethod.GET, "/customers/**").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");
+					authConfig.requestMatchers(HttpMethod.POST, "/customers/**").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");
 					
 					// Services routes
-					authConfig.requestMatchers(HttpMethod.GET, "/services/**").hasAuthority("CUSTOMER");
+					authConfig.requestMatchers(HttpMethod.GET, "/services/**").hasRole("CUSTOMER");
 					
 					authConfig.anyRequest().authenticated();
 				})

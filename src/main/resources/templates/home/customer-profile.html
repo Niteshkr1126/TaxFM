@@ -178,14 +178,34 @@
 									<h6 class="d-flex align-items-center mb-3">
 										<i class="fas fa-briefcase text-info mr-2"></i>Services
 									</h6>
-									<ul class="list-group">
-										<li th:each="service : ${customer.services}"
-												class="list-group-item d-flex justify-content-between align-items-center">
-											<span th:text="${service.name}"></span>
-											<span class="badge badge-primary badge-pill"
-														th:text="'₹' + ${service.rate}"></span>
-										</li>
-									</ul>
+									<table class="table table-striped table-hover table-bordered text-center table-container">
+										<thead class="thead-dark">
+										<tr>
+											<th>Service Type</th>
+											<th>Category</th>
+											<th>Slab Range</th>
+											<th>Rate</th>
+										</tr>
+										</thead>
+										<tbody>
+										<tr th:each="service : ${customer.services}"
+												class="clickable-row"
+												th:data-customer-id="${customer.customerId}"
+												th:data-service-id="${service.serviceId}">
+											<td th:text="${service.serviceType}"></td>
+											<td th:text="${service.category}"></td>
+											<td th:text="${service.slabRange}"></td>
+											<td>
+												<span class="badge badge-primary"
+															th:text="${'₹' + service.rate +
+																			 (service.frequency == 'Monthly' ? '/month' :
+																				service.frequency == 'Annually' ? '/year' :
+																				'')}">
+												</span>
+											</td>
+										</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -202,6 +222,6 @@
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script th:src="@{/js/employees/employees.js}"></script>
+<script th:src="@{/js/customers/customers.js}"></script>
 </body>
 </html>

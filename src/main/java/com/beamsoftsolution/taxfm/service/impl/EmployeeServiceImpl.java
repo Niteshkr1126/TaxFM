@@ -3,11 +3,13 @@ package com.beamsoftsolution.taxfm.service.impl;
 import com.beamsoftsolution.taxfm.config.CustomSessionManagementService;
 import com.beamsoftsolution.taxfm.constant.Constants;
 import com.beamsoftsolution.taxfm.exception.TaxFMException;
+import com.beamsoftsolution.taxfm.model.Authority;
 import com.beamsoftsolution.taxfm.model.Customer;
 import com.beamsoftsolution.taxfm.model.Employee;
 import com.beamsoftsolution.taxfm.repository.EmployeeRepository;
 import com.beamsoftsolution.taxfm.service.CustomerService;
 import com.beamsoftsolution.taxfm.service.EmployeeService;
+import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,14 +37,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	CustomerService customerService;
 	
+	@Autowired
+	TaxFMUtils taxFMUtils;
+	
 	@Override
+	@Transactional
 	public List<Employee> getAllEmployees() {
 		return employeeRepository.findAll();
 	}
 	
 	@Override
+	@Transactional
 	public Employee getLoggedInEmployee() {
-		return employeeRepository.findLoginEmployee().orElse(null);
+		return employeeRepository.findLoggedInEmployee().orElse(null);
 	}
 	
 	@Override
@@ -66,10 +71,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
-	public void addEmployee(Employee employee) throws TaxFMException {
+	public Employee addEmployee(Employee employee) throws TaxFMException {
 		if(getTotalEmployeesCount() < Constants.MAX_EMPLOYEES) {
 			employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-			employeeRepository.save(employee);
+			return employeeRepository.save(employee);
 		}
 		else {
 			throw new TaxFMException("max.employee.reached").withErrorCode(400);
@@ -96,20 +101,48 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeInDB.setAccountNonLocked(employee.getAccountNonLocked());
 		employeeInDB.setCredentialsNonExpired(employee.getCredentialsNonExpired());
 		employeeInDB.setEnabled(employee.getEnabled());
-		employeeInDB.setAuthorities(employee.getAuthorities());
+		employeeInDB.setRoles(employee.getRoles());
 		employeeInDB.setAssignedCustomers(employee.getAssignedCustomers());
 		customSessionManagementService.invalidateUserSessions(employee.getUsername());
 		return employeeRepository.save(employeeInDB);
 	}
 	
 	@Override
-	public void updateEmployeePassword(Integer employeeId, String newPassword) throws TaxFMException {
-		Employee employeeInDB = getEmployeeById(employeeId);
-		employeeInDB.setPassword(passwordEncoder.encode(newPassword));
-		employeeRepository.save(employeeInDB);
+	@Transactional
+	public void assignSubordinate(Integer employeeId, Integer subordinateId) throws TaxFMException {
+		Employee supervisor = getEmployeeById(employeeId);
+		Employee subordinate = getEmployeeById(subordinateId);
+		
+		if(supervisor.getSubordinates().contains(subordinate)) {
+			throw new TaxFMException("employee.already.subordinate").withErrorCode(400);
+		}
+		
+		supervisor.getSubordinates().add(subordinate);
+		subordinate.setSupervisor(supervisor);
+		
+		employeeRepository.save(supervisor);
+		employeeRepository.save(subordinate);
 	}
 	
 	@Override
+	@Transactional
+	public void removeAssignedSubordinate(Integer employeeId, Integer subordinateId) throws TaxFMException {
+		Employee supervisor = getEmployeeById(employeeId);
+		
+		Employee subordinate = supervisor.getSubordinates().stream()
+		                                 .filter(e -> e.getEmployeeId().equals(subordinateId))
+		                                 .findFirst()
+		                                 .orElseThrow(() -> new TaxFMException("subordinate.not.found"));
+		
+		supervisor.getSubordinates().remove(subordinate);
+		subordinate.setSupervisor(null);
+		
+		employeeRepository.save(supervisor);
+		employeeRepository.save(subordinate);
+	}
+	
+	@Override
+	@Transactional
 	public void assignCustomer(Integer employeeId, Integer customerId) throws TaxFMException {
 		try {
 			// Fetch the employee and customer
@@ -137,7 +170,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
-	public void removeCustomerFromEmployee(Integer employeeId, Integer customerId) throws TaxFMException {
+	public void removeAssignedCustomer(Integer employeeId, Integer customerId) throws TaxFMException {
 		try {
 			Employee employee = getEmployeeById(employeeId);
 			
@@ -156,106 +189,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
-	public void deleteEmployee(Employee employee) {
-		// Remove assigned customers
-		employee.getAssignedCustomers().clear();
-		employeeRepository.save(employee);
-		employeeRepository.delete(employee);
-		customSessionManagementService.invalidateUserSessions(employee.getUsername());
-	}
-	
-	@Override
-	public void deleteEmployeeById(Integer employeeId) throws TaxFMException {
-		employeeRepository.deleteById(employeeId);
-		customSessionManagementService.invalidateUserSessions(getEmployeeById(employeeId).getUsername());
-	}
-	
-	@Override
-	public long getTotalEmployeesCount() throws TaxFMException {
-		return employeeRepository.count();
-	}
-	
-	@Override
-	public Page<Employee> getPaginatedEmployees(Pageable pageable) {
-		return employeeRepository.findAll(pageable);
-	}
-	
-	@Override
-	public List<Customer> getAllCustomersForEmployee(Integer employeeId) throws TaxFMException {
-		Employee employee = getEmployeeById(employeeId);
-		// Check if the employee has the ADMIN authority
-		boolean isAdmin = employee.getAuthorities().stream()
-		                          .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("ADMIN"));
-		
-		if(isAdmin) {
-			// If the user has ADMIN authority, return all customers
-			return customerService.getAllCustomers();
-		}
-		else {
-			// Otherwise, return only assigned customers
-			return employeeRepository.findAssignedCustomersByEmployeeId(employeeId);
-		}
-	}
-	
-	// Add subordinate to an employee
-	@Override
-	@Transactional
-	public Employee addSubordinate(Integer employeeId, Integer subordinateId) throws TaxFMException {
-		Employee supervisor = getEmployeeById(employeeId);
-		Employee subordinate = getEmployeeById(subordinateId);
-		
-		if(supervisor.getSubordinates().contains(subordinate)) {
-			throw new TaxFMException("employee.already.subordinate").withErrorCode(400);
-		}
-		
-		supervisor.getSubordinates().add(subordinate);
-		subordinate.setSupervisor(supervisor);
-		
-		employeeRepository.save(supervisor);
-		return employeeRepository.save(subordinate);
-	}
-	
-	// Remove subordinate from an employee
-	@Override
-	@Transactional
-	public void removeSubordinate(Integer employeeId, Integer subordinateId) throws TaxFMException {
-		Employee supervisor = getEmployeeById(employeeId);
-		
-		Employee subordinate = supervisor.getSubordinates().stream()
-		                                 .filter(e -> e.getEmployeeId().equals(subordinateId))
-		                                 .findFirst()
-		                                 .orElseThrow(() -> new TaxFMException("subordinate.not.found"));
-		
-		supervisor.getSubordinates().remove(subordinate);
-		subordinate.setSupervisor(null);
-		
-		employeeRepository.save(supervisor);
-		employeeRepository.save(subordinate);
-	}
-	
-	public List<Employee> getSubordinates(Integer employeeId) {
-		return employeeRepository.findBySupervisor_EmployeeId(employeeId);
-	}
-	
-	public List<Employee> getAvailableEmployeesForSubordination(Integer employeeId) throws TaxFMException {
-		Employee employee = getEmployeeById(employeeId);
-		
-		return employeeRepository.findAll().stream()
-		                         .filter(e -> !e.equals(employee))
-		                         .filter(e -> !employee.getSubordinates().contains(e))
-		                         .filter(e -> e.getAuthorities().stream().noneMatch(authority -> "ADMIN".equalsIgnoreCase(authority.getAuthority())))
-		                         .collect(Collectors.toList());
-	}
-	
-	@Override
-	public void toggleLock(Integer employeeId) throws TaxFMException {
+	public void toggleLockUnlock(Integer employeeId) throws TaxFMException {
 		Employee employee = getEmployeeById(employeeId);
 		employee.setAccountNonLocked(!employee.getAccountNonLocked());
 		employeeRepository.save(employee);
 	}
 	
 	@Override
-	public void toggleEnable(Integer employeeId) throws TaxFMException {
+	public void toggleEnableDisable(Integer employeeId) throws TaxFMException {
 		Employee employee = getEmployeeById(employeeId);
 		employee.setEnabled(!employee.getEnabled());
 		employeeRepository.save(employee);
@@ -266,5 +207,91 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee employee = getEmployeeById(employeeId);
 		employee.setPassword(passwordEncoder.encode(newPassword));
 		employeeRepository.save(employee);
+	}
+	
+	@Override
+	public void deleteEmployee(Employee employee) {
+		employee.getAssignedCustomers().clear();
+		employeeRepository.save(employee);
+		employeeRepository.delete(employee);
+		customSessionManagementService.invalidateUserSessions(employee.getUsername());
+	}
+	
+	@Override
+	public void deleteEmployeeById(Integer employeeId) throws TaxFMException {
+		customSessionManagementService.invalidateUserSessions(getEmployeeById(employeeId).getUsername());
+		employeeRepository.deleteById(employeeId);
+	}
+	
+	@Override
+	public long getTotalEmployeesCount() throws TaxFMException {
+		return employeeRepository.count();
+	}
+	
+	@Override
+	public Employee getSupervisor(Integer employeeId) {
+		return employeeRepository.findSupervisorByEmployeeId(employeeId).orElse(null);
+	}
+	
+	public List<Employee> getSubordinates(Integer employeeId) {
+		return employeeRepository.findBySupervisor_EmployeeId(employeeId);
+	}
+	
+	@Transactional
+	public List<Employee> getAvailableEmployeesForSubordination(Employee loggedInEmployee, Employee employee) throws TaxFMException {
+		return employeeRepository.findAll().stream()
+		                         .filter(e -> !e.equals(employee))  // Exclude the given employee
+		                         .filter(e -> !employee.getSubordinates().contains(e))  // Exclude existing subordinates
+		                         .filter(e -> {
+			                         Set<String> employeeAuthorities = e.getRoles().stream()
+			                                                            .flatMap(role -> role.getAuthorities().stream()) // Get all authorities from roles
+			                                                            .map(Authority::getAuthority) // Extract authority names
+			                                                            .collect(Collectors.toSet()); // Get employee authorities
+			                         return !employeeAuthorities.contains("VIEW_ALL_EMPLOYEES"); // Ensure VIEW_ALL_EMPLOYEES is not present
+		                         })
+		                         .toList();
+	}
+	
+	@Override
+	public List<Customer> getCustomersForEmployeeForAssignment(Employee loggedInEmployee, Employee employee) throws TaxFMException {
+		Set<String> loggedInEmployeeAuthorities = taxFMUtils.getEmployeeAuthorities(loggedInEmployee);
+		Set<Customer> assignedCustomers = Set.copyOf(employee.getAssignedCustomers());
+		
+		if(loggedInEmployeeAuthorities.contains("VIEW_ALL_CUSTOMERS")) {
+			return customerService.getAllCustomers().stream()
+			                      .filter(customer -> !assignedCustomers.contains(customer))
+			                      .toList();
+		}
+		
+		if(loggedInEmployeeAuthorities.contains("VIEW_ASSIGNED_CUSTOMERS")) {
+			return employeeRepository.findAssignedCustomersByEmployeeId(loggedInEmployee.getEmployeeId()).stream()
+			                         .filter(customer -> !assignedCustomers.contains(customer))
+			                         .toList();
+		}
+		
+		return Collections.emptyList();
+	}
+	
+	@Override
+	public void removeUnauthorisedCustomersFromEmployee(Employee loggedInEmployee, Employee employee) throws TaxFMException {
+		Set<String> loggedInEmployeeAuthorities = taxFMUtils.getEmployeeAuthorities(loggedInEmployee);
+		List<Customer> assignedCustomers = employee.getAssignedCustomers();
+		Set<Customer> loggedInEmployeeAssignedCustomers = Set.copyOf(loggedInEmployee.getAssignedCustomers());
+		if(loggedInEmployeeAuthorities.contains("VIEW_ALL_CUSTOMERS")) {
+			return;
+		}
+		if(loggedInEmployeeAuthorities.contains("VIEW_ASSIGNED_CUSTOMERS")) {
+			// Get the intersection (common customers in both sets)
+			List<Customer> finalList = assignedCustomers.stream()
+			                                            .filter(loggedInEmployeeAssignedCustomers::contains)
+			                                            .toList();
+			
+			employee.setAssignedCustomers(finalList);
+		}
+	}
+	
+	@Override
+	public Page<Employee> getPaginatedEmployees(Pageable pageable) {
+		return employeeRepository.findAll(pageable);
 	}
 }

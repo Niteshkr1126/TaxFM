@@ -60,10 +60,6 @@ public class SecurityUserDetailsService implements UserDetailsService {
 			
 			throw new UsernameNotFoundException("No user found with username: " + username);
 		}
-		catch(TaxFMException e) {
-			log.error("Authentication failure: {}", e.getMessage());
-			throw new UsernameNotFoundException(e.getMessage(), e);
-		}
 		catch(UsernameNotFoundException e) {
 			log.error("Authentication failure: {}", e.getMessage());
 			throw e;
@@ -74,41 +70,41 @@ public class SecurityUserDetailsService implements UserDetailsService {
 		}
 	}
 	
-	private void validateEmployeeAccountStatus(Employee employee) throws TaxFMException {
+	private void validateEmployeeAccountStatus(Employee employee) {
 		if(!employee.getEnabled()) {
 			log.warn("Employee account disabled: {}", employee.getUsername());
-			throw new TaxFMException("Account disabled");
+			throw new UsernameNotFoundException("Account disabled");
 		}
 		if(!employee.getAccountNonExpired()) {
 			log.warn("Employee account expired: {}", employee.getUsername());
-			throw new TaxFMException("Account expired");
+			throw new UsernameNotFoundException("Account expired");
 		}
 		if(!employee.getAccountNonLocked()) {
 			log.warn("Employee account locked: {}", employee.getUsername());
-			throw new TaxFMException("Account locked");
+			throw new UsernameNotFoundException("Account locked");
 		}
 		if(!employee.getCredentialsNonExpired()) {
 			log.warn("Employee credentials expired: {}", employee.getUsername());
-			throw new TaxFMException("Credentials expired");
+			throw new UsernameNotFoundException("Credentials expired");
 		}
 	}
 	
-	private void validateCustomerAccountStatus(Customer customer) throws TaxFMException {
+	private void validateCustomerAccountStatus(Customer customer) {
 		if(!customer.getEnabled()) {
 			log.warn("Customer account disabled: {}", customer.getUsername());
-			throw new TaxFMException("Account disabled");
+			throw new UsernameNotFoundException("Account disabled");
 		}
 		if(!customer.getAccountNonExpired()) {
 			log.warn("Customer account expired: {}", customer.getUsername());
-			throw new TaxFMException("Account expired");
+			throw new UsernameNotFoundException("Account expired");
 		}
 		if(!customer.getAccountNonLocked()) {
 			log.warn("Customer account locked: {}", customer.getUsername());
-			throw new TaxFMException("Account locked");
+			throw new UsernameNotFoundException("Account locked");
 		}
 		if(!customer.getCredentialsNonExpired()) {
 			log.warn("Customer credentials expired: {}", customer.getUsername());
-			throw new TaxFMException("Credentials expired");
+			throw new UsernameNotFoundException("Credentials expired");
 		}
 	}
 	

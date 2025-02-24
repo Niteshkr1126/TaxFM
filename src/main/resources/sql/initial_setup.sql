@@ -183,6 +183,3 @@ UPDATE employees SET supervisor_id = 2 WHERE employee_id = 3;
 UPDATE employees SET supervisor_id = 2 WHERE employee_id = 4;
 
 INSERT INTO employees_customers (employee_id, customer_id) VALUES (2, 1), (3, 2);
-
-INSERT INTO authorities (authority_id, authority, description) VALUES (30, 'VIEW_EMPLOYEE_ATTENDANCE', 'View employee attendance');
-INSERT INTO roles_authorities (role_id, authority_id) VALUES (1, 30);

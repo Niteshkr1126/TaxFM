@@ -58,6 +58,7 @@ public class SecurityConfig {
 					
 					// Routes for all authenticated users
 					authConfig.requestMatchers(HttpMethod.GET, "/home", "/profile").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT", "CUSTOMER");
+					authConfig.requestMatchers(HttpMethod.GET, "/profile/attendance").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");
 					
 					// Reset Password Routes
 					authConfig.requestMatchers(HttpMethod.POST, "/employees/{employeeId}/reset-password").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");

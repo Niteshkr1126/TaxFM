@@ -1,4 +1,11 @@
 use TaxFM;
+
+INSERT INTO roles (role_id, description, role) VALUES
+(1, 'Administrator Employee', 'ROLE_ADMIN'),
+(2, 'Senior Accountant Employee', 'ROLE_SENIOR_ACCOUNTANT'),
+(3, 'Accountant Employee', 'ROLE_ACCOUNTANT'),
+(4, 'Customer', 'ROLE_CUSTOMER');
+
 -- Insert Authorities
 INSERT INTO authorities (authority_id, authority, description) VALUES
 (1, 'ADD_EMPLOYEE', 'Add new employee'),
@@ -24,17 +31,13 @@ INSERT INTO authorities (authority_id, authority, description) VALUES
 (21, 'DELETE_SERVICE', 'Delete a specific service'),
 (22, 'ASSIGN_SERVICE', 'Assign services to customers'),
 (23, 'REMOVE_ASSIGNED_SERVICE', 'Remove assigned service'),
-(24, 'VIEW_PROFILE', 'View own profile'),
-(25, 'RESET_PASSWORD', 'Reset own password'),
-(26, 'LOCK_UNLOCK_ACCOUNT', 'Lock or unlock accounts'),
-(27, 'VIEW_AGREEMENT', 'View employee agreements'),
-(28, 'ENABLE_DISABLE_ACCOUNT', 'Enable or disable accounts');
-
-INSERT INTO roles (role_id, description, role) VALUES
-(1, 'Administrator Employee', 'ROLE_ADMIN'),
-(2, 'Senior Accountant Employee', 'ROLE_SENIOR_ACCOUNTANT'),
-(3, 'Accountant Employee', 'ROLE_ACCOUNTANT'),
-(4, 'Customer', 'ROLE_CUSTOMER');
+(24, 'LOCK_UNLOCK_ACCOUNT', 'Lock or unlock accounts'),
+(25, 'ENABLE_DISABLE_ACCOUNT', 'Enable or disable accounts'),
+(26, 'VIEW_PROFILE', 'View own profile'),
+(27, 'RESET_PASSWORD', 'Reset own password'),
+(28, 'VIEW_AGREEMENT', 'View employee agreements'),
+(29, 'VIEW_ATTENDANCE', 'View attendance'),
+(30, 'VIEW_EMPLOYEE_ATTENDANCE', 'View employee attendance');
 
 -- ROLE_ADMIN Assignments
 INSERT INTO roles_authorities (role_id, authority_id) VALUES
@@ -61,11 +64,13 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 (1, 21), -- DELETE_SERVICE
 (1, 22), -- ASSIGN_SERVICE
 (1, 23), -- REMOVE_ASSIGNED_SERVICE
-(1, 24), -- VIEW_PROFILE
-(1, 25), -- RESET_PASSWORD
-(1, 26), -- LOCK_UNLOCK_ACCOUNT
-(1, 27), -- VIEW_AGREEMENT
-(1, 28); -- ENABLE_DISABLE_ACCOUNT
+(1, 24), -- LOCK_UNLOCK_ACCOUNT
+(1, 25), -- ENABLE_DISABLE_ACCOUNT
+(1, 26), -- VIEW_PROFILE
+(1, 27), -- RESET_PASSWORD
+(1, 28), -- VIEW_AGREEMENT
+(1, 29), -- VIEW_ATTENDANCE
+(1, 30); -- VIEW_EMPLOYEE_ATTENDANCE
 
 
 -- ROLE_SENIOR_ACCOUNTANT Assignments
@@ -80,9 +85,10 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 (2, 17), -- REMOVE_ASSIGNED_CUSTOMER
 (2, 18), -- VIEW_ASSIGNED_SERVICES
 (2, 19), -- VIEW_SERVICE
-(2, 24), -- VIEW_PROFILE
-(2, 25), -- RESET_PASSWORD
-(2, 27); -- VIEW_AGREEMENT
+(2, 26), -- VIEW_PROFILE
+(2, 27), -- RESET_PASSWORD
+(2, 28), -- VIEW_AGREEMENT
+(2, 29); -- VIEW_ATTENDANCE
 
 
 -- ROLE_ACCOUNTANT Assignments
@@ -91,9 +97,10 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 (3, 16), -- VIEW_ASSIGNED_CUSTOMERS
 (3, 18), -- VIEW_ASSIGNED_SERVICES
 (3, 19), -- VIEW_SERVICE
-(3, 24), -- VIEW_PROFILE
-(3, 25), -- RESET_PASSWORD
-(3, 27); -- VIEW_AGREEMENT
+(3, 26), -- VIEW_PROFILE
+(3, 27), -- RESET_PASSWORD
+(3, 28), -- VIEW_AGREEMENT
+(3, 29); -- VIEW_ATTENDANCE
 
 -- ROLE_CUSTOMER Assignments
 INSERT INTO roles_authorities (role_id, authority_id) VALUES
@@ -101,9 +108,9 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 (4, 16), -- VIEW_ASSIGNED_CUSTOMERS
 (4, 18), -- VIEW_ASSIGNED_SERVICES
 (4, 19), -- VIEW_SERVICE
-(4, 24), -- VIEW_PROFILE
-(4, 25), -- RESET_PASSWORD
-(4, 27); -- VIEW_AGREEMENT
+(4, 26), -- VIEW_PROFILE
+(4, 27), -- RESET_PASSWORD
+(4, 28); -- VIEW_AGREEMENT
 
 INSERT INTO `employees` (
     `employee_id`, `username`, `first_name`, `last_name`, `designation`, `email`,
@@ -175,16 +182,7 @@ UPDATE employees SET supervisor_id = 1 WHERE employee_id = 2;
 UPDATE employees SET supervisor_id = 2 WHERE employee_id = 3;
 UPDATE employees SET supervisor_id = 2 WHERE employee_id = 4;
 
-
 INSERT INTO employees_customers (employee_id, customer_id) VALUES (2, 1), (3, 2);
 
-
-
-INSERT INTO `customers` (
-    `customer_id`, `username`, `first_name`, `last_name`, `firm_name`, `address`,
-    `email`, `phone_number`, `pan`, `aadhar_card_number`, `gst_number`, `password`,
-    `account_non_expired`, `account_non_locked`, `credentials_non_expired`, `enabled`
-) VALUES
-(3, 'customer3', 'CUSTOMER', 'KUMAR', 'JOHN ENTERPRISES', '123 CUSTOMER LANE',
- 'CUSTOMER@GMAIL.COM', '9876543220', 'ABCDE5672Z', 218921879291872, 'GST9826543X',
- '$2a$10$wUO.OGdgDawpMXdRUIwKKe7kAuoSLVQw6BBfu772erbWF1KBXkFIe', 1, 1, 1, 1);
+INSERT INTO authorities (authority_id, authority, description) VALUES (30, 'VIEW_EMPLOYEE_ATTENDANCE', 'View employee attendance');
+INSERT INTO roles_authorities (role_id, authority_id) VALUES (1, 30);

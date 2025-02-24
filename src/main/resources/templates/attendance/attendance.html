@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="https://www.thymeleaf.org">
+<head th:replace="~{fragments/fragments :: profile-head}"></head>
+<body>
+
+<!-- Top Banner -->
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- Navigation Bar -->
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+
+<!-- Main Content -->
+<main>
+	<section class="container">
+		<div class="date-filter">
+			<h2 class="mb-4">Attendance Records</h2>
+			<form method="get" th:action="@{/profile/attendance}">
+				<div class="row g-3">
+					<div class="col-md-3">
+						<label class="form-label">Start Date</label>
+						<input type="date"
+									 name="startDate"
+									 th:value="${startDate != null} ? ${#temporals.format(startDate, 'yyyy-MM-dd')} : ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+									 class="form-control">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">End Date</label>
+						<input type="date"
+									 name="endDate"
+									 th:value="${endDate != null} ? ${#temporals.format(endDate, 'yyyy-MM-dd')} : ${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+									 class="form-control">
+					</div>
+					<div class="col-md-2 align-self-end">
+						<button type="submit" class="btn btn-primary">Filter</button>
+						<a th:href="@{/profile/attendance}" class="btn btn-outline-secondary">Today</a>
+					</div>
+				</div>
+			</form>
+			<div th:if="${error}" class="alert alert-danger mt-3" role="alert">
+				<span th:text="${error}"></span>
+			</div>
+		</div>
+		
+		<div class="table-responsive">
+			<table class="table table-striped table-hover text-center table-container">
+				<thead class="table-dark">
+				<tr>
+					<th>Login Time</th>
+					<th>Logout Time</th>
+					<th>Duration</th>
+					<th>Status</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="attendance : ${attendances}">
+					<td th:text="${#temporals.format(attendance.loginTime, 'dd-MMM-yyyy HH:mm')}"></td>
+					<td>
+                        <span th:if="${attendance.logoutTime != null}"
+															th:text="${#temporals.format(attendance.logoutTime, 'dd-MMM-yyyy HH:mm')}"></span>
+						<span th:if="${attendance.logoutTime == null}" class="text-muted">Still logged in</span>
+					</td>
+					<td th:text="${@durationUtility.formatDuration(attendance.loginTime, attendance.logoutTime)}"></td>
+					<td>
+                        <span th:classappend="${attendance.logoutTime == null} ? 'logged-in' : 'logged-out'"
+															class="status-indicator"></span>
+						<span th:text="${attendance.logoutTime == null} ? 'Active' : 'Completed'"
+									class="ms-2"></span>
+					</td>
+				</tr>
+				<tr th:if="${attendances.isEmpty()}">
+					<td colspan="4" class="text-center text-muted py-4">
+						No attendance records found for selected dates
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/fragments :: sub-footer}"></footer>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

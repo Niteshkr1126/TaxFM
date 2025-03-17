@@ -25,7 +25,7 @@ public class Department {
 	@Column(length = 500)
 	private String description;
 	
-	private String imagePath;
+	private String imageName;
 	
 	private String url;
 	

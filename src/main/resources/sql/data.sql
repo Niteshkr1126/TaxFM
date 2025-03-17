@@ -1,14 +1,14 @@
-INSERT INTO departments (name, description, image_path, url) VALUES
-('Comprehensive accounting solutions to manage your finances efficiently.', '/images/landing/manage-customer-service.svg', '/pricing/accounts'),
-('Goods and Services Tax', 'Seamless GST compliance and filing services.', '/images/landing/manage-purchase-service.svg', '/pricing/gst'),
-('Income Tax', 'Expert assistance with income tax planning and filing.', '/images/landing/manage-sale-service.svg', '/pricing/income-tax'),
-('Audit', 'Professional auditing services for accurate financial reporting.', '/images/landing/manage-stock-service.svg', '/pricing/audit'),
-('TDS/TCS Filing', 'Timely and precise TDS/TCS compliance and filing.', '/images/landing/manage-expense-service.svg', '/pricing/tds'),
-('MCA Filing', 'Efficient management and filing with the Ministry of Corporate Affairs.', '/images/landing/generate-report-service.svg', '/pricing/mca'),
-('Company Formation', 'End-to-end assistance in setting up your company.', '/images/landing/manage-customer-service.svg', '/pricing/company-formation'),
-('LIC', 'Life insurance solutions tailored to your needs.', '/images/landing/manage-purchase-service.svg', '/pricing/lic'),
-('Mutual Funds', 'Smart investment options through mutual funds.', '/images/landing/manage-sale-service.svg', '/pricing/mutual-funds'),
-('Insurance', 'Comprehensive insurance services for security and peace of mind.', '/images/landing/manage-stock-service.svg', '/pricing/insurance');
+INSERT INTO departments (name, description, image_name, url) VALUES
+('Accounts', 'Comprehensive accounting solutions to manage your finances efficiently.', 'accounts.jpg', '/pricing/accounts'),
+('Goods and Services Tax', 'Seamless GST compliance and filing services.', 'gst.jpg', '/pricing/gst'),
+('Income Tax Return Filing', 'Expert assistance with income tax planning and filing.', 'itr.jpg', '/pricing/income-tax'),
+('Audit', 'Professional auditing services for accurate financial reporting.', 'audit.jpg', '/pricing/audit'),
+('TDS/TCS Filing', 'Timely and precise TDS/TCS compliance and filing.', 'tcs_tds.jpg', '/pricing/tds'),
+('MCA Filing', 'Efficient management and filing with the Ministry of Corporate Affairs.', 'mca_filing.jpg', '/pricing/mca'),
+('Company Formation', 'End-to-end assistance in setting up your company.', 'company_formation.jpg', '/pricing/company-formation'),
+('LIC', 'Life insurance solutions tailored to your needs.', 'lic.jpg', '/pricing/lic'),
+('Mutual Funds', 'Smart investment options through mutual funds.', 'mutual_funds.jpg', '/pricing/mutual-funds'),
+('Insurance', 'Comprehensive insurance services for security and peace of mind.', 'insurance.jpg', '/pricing/insurance');
 
 INSERT INTO service_rates (department_id, category, turnover_min, turnover_max, slab_range, rate, gst_percentage, frequency)
 VALUES 

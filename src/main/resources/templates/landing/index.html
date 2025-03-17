@@ -99,7 +99,7 @@
 			<div class="services-area flex">
 				<div class="services-card flex" th:each="department : ${departments}">
 					<a class="primary-button" th:href="@{/pricing/{departmentId}(departmentId=${department.departmentId})}">
-						<img alt="" th:src="@{${department.imagePath}}">
+						<img alt="" th:src="@{'/images/landing/' + ${department.imageName}}">
 						<h3 th:text="${department.name}"></h3>
 					</a>
 					<p th:text="${department.description}"></p>

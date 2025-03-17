@@ -177,7 +177,6 @@
 									<table class="table table-striped table-hover table-bordered text-center table-container">
 										<thead class="thead-dark">
 										<tr>
-											<th>Service Type</th>
 											<th>Category</th>
 											<th>Slab Range</th>
 											<th>Rate</th>
@@ -189,7 +188,6 @@
 												class="clickable-row"
 												th:data-customer-id="${customer.customerId}"
 												th:data-service-id="${service.serviceId}">
-											<td th:text="${service.serviceType}"></td>
 											<td th:text="${service.category}"></td>
 											<td th:text="${service.slabRange}"></td>
 											<td>
@@ -234,7 +232,7 @@
 												<option value="" disabled selected>Select a Service</option>
 												<option th:each="service : ${availableServices}"
 																th:value="${service.serviceId}"
-																th:text="${service.serviceType + ' - ' + service.category + ' - ' + service.slabRange}">
+																th:text="${service.category + ' - ' + service.slabRange}">
 												</option>
 											</select>
 										</div>

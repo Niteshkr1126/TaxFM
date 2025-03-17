@@ -6,6 +6,7 @@ public class Constants {
 	
 	public static final String SHORT_COMPANY_NAME = "TaxFM";
 	
+	public static final int MAX_ROLES = 5;
 	public static final int MAX_EMPLOYEES = 50;
 	
 	public static final int MAX_CUSTOMERS = 50;

@@ -1,6 +1,6 @@
 package com.beamsoftsolution.taxfm.config;
 
-import com.beamsoftsolution.taxfm.exception.TaxFMException;
+import com.beamsoftsolution.taxfm.model.Authority;
 import com.beamsoftsolution.taxfm.model.Customer;
 import com.beamsoftsolution.taxfm.model.Employee;
 import com.beamsoftsolution.taxfm.model.Role;
@@ -45,7 +45,8 @@ public class SecurityUserDetailsService implements UserDetailsService {
 				validateEmployeeAccountStatus(employee);
 				
 				return new SecurityUser(employee.getUsername(), employee.getPassword(), true, true, true, true,
-				                        getGrantedAuthorities(employee.getRoles()), employee.getFirstName(), employee.getLastName(), employee.getEmail());
+				                        getGrantedAuthorities(employee.getRoles(), employee.getAuthorities()), employee.getFirstName(), employee.getLastName(),
+				                        employee.getEmail());
 			}
 			
 			// Try loading customer if employee not found
@@ -55,7 +56,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 				validateCustomerAccountStatus(customer);
 				
 				return new SecurityUser(customer.getUsername(), customer.getPassword(), true, true, true, true,
-				                        getGrantedAuthorities(customer.getRoles()), customer.getFirstName(), customer.getLastName(), customer.getEmail());
+				                        getGrantedAuthorities(customer.getRoles(), customer.getAuthorities()), customer.getFirstName(), customer.getLastName(), customer.getEmail());
 			}
 			
 			throw new UsernameNotFoundException("No user found with username: " + username);
@@ -108,12 +109,17 @@ public class SecurityUserDetailsService implements UserDetailsService {
 		}
 	}
 	
-	private Collection<? extends GrantedAuthority> getGrantedAuthorities(List<Role> roles) {
-		return roles.stream()
-		            .flatMap(role -> Stream.concat(
-				            Stream.of(new SimpleGrantedAuthority(role.getRole())),
-				            role.getAuthorities().stream().map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
-		            ))
-		            .collect(Collectors.toSet());
+	private Collection<? extends GrantedAuthority> getGrantedAuthorities(List<Role> roles, List<Authority> authorities) {
+		return Stream.concat(
+				// Stream roles as SimpleGrantedAuthority("ROLE_<roleName>")
+				roles.stream()
+				     .flatMap(role -> Stream.concat(
+						     Stream.of(new SimpleGrantedAuthority(role.getRole())),
+						     role.getAuthorities().stream().map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
+				     )),
+				
+				// Stream standalone authorities as SimpleGrantedAuthority("<authority>")
+				authorities.stream().map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
+		).collect(Collectors.toSet());
 	}
 }

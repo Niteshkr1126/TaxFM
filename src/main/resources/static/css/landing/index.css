@@ -275,17 +275,21 @@
 }
 
 .services-area {
-	flex-wrap: wrap;
-	justify-content: space-between;
-	gap: 20px;
-	margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping if needed */
+    justify-content: center; /* Centers items horizontally */
+    align-items: flex-start; /* Aligns items at the start */
+    gap: 20px; /* Adds spacing between cards */
 }
 
 .services-card {
-	flex-direction: column;
-	gap: 20px;
-	max-width: 30%;
-	text-align: center;
+    display: flex;
+    flex-direction: column; /* Ensures a vertical arrangement */
+    align-items: center; /* Centers content horizontally */
+    text-align: center; /* Centers text */
+    width: 250px; /* Adjust as needed */
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .services-card img {

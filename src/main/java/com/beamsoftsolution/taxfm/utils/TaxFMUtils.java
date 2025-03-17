@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class TaxFMUtils {
@@ -19,10 +20,15 @@ public class TaxFMUtils {
 	}
 	
 	public Set<String> getEmployeeAuthorities(Employee employee) {
-		// Extract authorities from roles
-		return employee.getRoles().stream()
-		               .flatMap(role -> role.getAuthorities().stream()) // Get all authorities from roles
-		               .map(Authority::getAuthority) // Extract authority names
-		               .collect(Collectors.toSet());
+		
+		return Stream.concat(
+				             // Stream roles
+				             employee.getRoles().stream()
+				                     .flatMap(role -> role.getAuthorities().stream())
+				                     .map(Authority::getAuthority),
+				             // Stream Authorities
+				             employee.getAuthorities().stream()
+				                     .map(Authority::getAuthority))
+		             .collect(Collectors.toSet());
 	}
 }

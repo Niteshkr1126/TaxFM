@@ -37,7 +37,11 @@ INSERT INTO authorities (authority_id, authority, description) VALUES
 (27, 'RESET_PASSWORD', 'Reset own password'),
 (28, 'VIEW_AGREEMENT', 'View employee agreements'),
 (29, 'VIEW_ATTENDANCE', 'View attendance'),
-(30, 'VIEW_EMPLOYEE_ATTENDANCE', 'View employee attendance');
+(30, 'VIEW_EMPLOYEE_ATTENDANCE', 'View employee attendance'),
+(31, 'VIEW_ALL_ROLES', 'View all roles'),
+(32, 'ADD_ROLE', 'Add a new role'),
+(33, 'UPDATE_ROLE', 'Update a role'),
+(34, 'DELETE_ROLE', 'Delete a role');
 
 -- ROLE_ADMIN Assignments
 INSERT INTO roles_authorities (role_id, authority_id) VALUES
@@ -70,19 +74,19 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 (1, 27), -- RESET_PASSWORD
 (1, 28), -- VIEW_AGREEMENT
 (1, 29), -- VIEW_ATTENDANCE
-(1, 30); -- VIEW_EMPLOYEE_ATTENDANCE
+(1, 30), -- VIEW_EMPLOYEE_ATTENDANCE
+(1, 31), -- VIEW_ALL_ROLES
+(1, 32), -- ADD_ROLE
+(1, 33), -- UPDATE_ROLE
+(1, 34); -- DELETE_ROLE
 
 
 -- ROLE_SENIOR_ACCOUNTANT Assignments
 INSERT INTO roles_authorities (role_id, authority_id) VALUES
-(2, 6),  -- ASSIGN_SUBORDINATE
 (2, 7),  -- VIEW_ASSIGNED_SUBORDINATES
 (2, 8),  -- VIEW_SUBORDINATE
-(2, 9),  -- REMOVE_ASSIGNED_SUBORDINATE
 (2, 12), -- VIEW_CUSTOMER
-(2, 15), -- ASSIGN_CUSTOMER
 (2, 16), -- VIEW_ASSIGNED_CUSTOMERS
-(2, 17), -- REMOVE_ASSIGNED_CUSTOMER
 (2, 18), -- VIEW_ASSIGNED_SERVICES
 (2, 19), -- VIEW_SERVICE
 (2, 26), -- VIEW_PROFILE
@@ -104,8 +108,6 @@ INSERT INTO roles_authorities (role_id, authority_id) VALUES
 
 -- ROLE_CUSTOMER Assignments
 INSERT INTO roles_authorities (role_id, authority_id) VALUES
-(4, 12), -- VIEW_CUSTOMER
-(4, 16), -- VIEW_ASSIGNED_CUSTOMERS
 (4, 18), -- VIEW_ASSIGNED_SERVICES
 (4, 19), -- VIEW_SERVICE
 (4, 26), -- VIEW_PROFILE
@@ -183,3 +185,8 @@ UPDATE employees SET supervisor_id = 2 WHERE employee_id = 3;
 UPDATE employees SET supervisor_id = 2 WHERE employee_id = 4;
 
 INSERT INTO employees_customers (employee_id, customer_id) VALUES (2, 1), (3, 2);
+
+
+
+INSERT INTO authorities (authority_id, authority, description) VALUES (32, 'ADD_ROLE', 'Add a new role'), (33, 'UPDATE_ROLE', 'Update a role'), (34, 'DELETE_ROLE', 'Delete a role');
+INSERT INTO roles_authorities (role_id, authority_id) VALUES (1, 32), (1, 33), (1, 34);

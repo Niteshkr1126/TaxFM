@@ -53,7 +53,7 @@ public class SecurityConfig {
 					
 					// Publicly accessible routes
 					authConfig.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
-					authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "/access-denied").permitAll();
+					authConfig.requestMatchers(HttpMethod.GET, "/pricing", "/pricing/**", "/career/**", "/", "/login", "/login-error", "/error", "/logout", "/access-denied").permitAll();
 					authConfig.requestMatchers(HttpMethod.POST, "/", "/login-error", "/error", "/logout").permitAll();
 					
 					// Routes for all authenticated users
@@ -63,6 +63,10 @@ public class SecurityConfig {
 					// Reset Password Routes
 					authConfig.requestMatchers(HttpMethod.POST, "/employees/{employeeId}/reset-password").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT", "ACCOUNTANT");
 					authConfig.requestMatchers(HttpMethod.POST, "/customers/{customerId}/reset-password").hasRole("CUSTOMER");
+					
+					// Roles routes
+					authConfig.requestMatchers(HttpMethod.GET, "/roles/**").hasAnyRole("ADMIN");
+					authConfig.requestMatchers(HttpMethod.POST, "/roles/**").hasAnyRole("ADMIN");
 					
 					// Employee routes
 					authConfig.requestMatchers(HttpMethod.GET, "/employees/**").hasAnyRole("ADMIN", "SENIOR_ACCOUNTANT");

@@ -14,31 +14,48 @@
     --padding-inline-section: 20px;
 }
 
-/* Nav Bar */
-nav {
-    position: fixed;
-    top: 40px;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    background: bisque;
-}
-
-main {
-    margin-top: 140px;
-    padding: 20px;
-}
-
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
     font-family: 'Poppins', sans-serif;
     color: var(--primary-text-color);
     background: honeydew;
-    min-height: 80vh;
     background-image: url('/images/common/background_image1.jpg');
     background-size: cover;
     padding-top: 60px;
+}
+
+/* Top Banner */
+.top-banner {
+    background-color: #4fb3d4;
+    background-size: 300px;
+    position: fixed;  /* Stays at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Navbar */
+nav {
+    position: fixed;  /* Keep navbar at top */
+    top: 40px; /* Push navbar below the top banner */
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background: bisque;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Content */
+main {
+    margin-top: 100px; /* Adjust so it appears below top banner and navbar */
+    flex: 1; /* Takes up remaining space */
+    padding: 20px;
 }
 
 h1 {
@@ -98,7 +115,6 @@ ul {
 }
 
 .primary-button {
-    border: 0.5px solid var(--secondary-text-color);
     border-radius: 6px;
     font-weight: 700;
     color: var(--primary-text-color) !important;
@@ -124,19 +140,6 @@ ul {
 
 .secondary-button:hover {
     background-color: var(--accent-color-dark);
-}
-
-/* top banner */
-
-.top-banner {
-    background-color: #4fb3d4;
-    background-size: 300px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .banner-text {
@@ -169,11 +172,13 @@ ul {
     display: none;
 }
 
-/* footer */
-
+/* Footer */
 footer {
-    padding-block: 80px;
-    background-color: #ebf2fa;
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
 }
 
 .link-column {

@@ -71,6 +71,15 @@ public class Employee {
 	)
 	private List<Role> roles;
 	
+	@Singular("authority")
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "employees_authorities",
+			joinColumns = { @JoinColumn(name = "employeeId", referencedColumnName = "employeeId") },
+			inverseJoinColumns = { @JoinColumn(name = "authorityId", referencedColumnName = "authorityId") }
+	)
+	private List<Authority> authorities;
+	
 	// Owning side (foreign key in DB)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "supervisor_id")

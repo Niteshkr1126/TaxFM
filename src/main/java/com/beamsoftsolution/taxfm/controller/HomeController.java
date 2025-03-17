@@ -1,5 +1,7 @@
 package com.beamsoftsolution.taxfm.controller;
 
+import com.beamsoftsolution.taxfm.model.Department;
+import com.beamsoftsolution.taxfm.service.DepartmentService;
 import com.beamsoftsolution.taxfm.utils.TaxFMUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping
 @Slf4j
@@ -19,6 +23,9 @@ public class HomeController {
 	@Autowired
 	TaxFMUtils taxFMUtils;
 	
+	@Autowired
+	DepartmentService departmentService;
+	
 	@GetMapping
 	public String index(Model model, Authentication authentication) {
 		if(authentication != null) {
@@ -26,6 +33,8 @@ public class HomeController {
 		}
 		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("activeTab", "employee-login");
+		List<Department> departments = departmentService.getAllDepartments();
+		model.addAttribute("departments", departments);
 		return "landing/index";
 	}
 	
@@ -33,6 +42,8 @@ public class HomeController {
 	public String login(Model model, @RequestParam(value = "activeTab", defaultValue = "employee-login") String activeTab) {
 		taxFMUtils.setCompanyAttributes(model);
 		model.addAttribute("activeTab", activeTab);
+		List<Department> departments = departmentService.getAllDepartments();
+		model.addAttribute("departments", departments);
 		return "landing/index";
 	}
 	
@@ -52,6 +63,8 @@ public class HomeController {
 		model.addAttribute("loginError", true);
 		String loginType = (String) httpServletRequest.getSession().getAttribute("loginType");
 		model.addAttribute("activeTab", "employee".equals(loginType) ? "employee-login" : "customer-login");
+		List<Department> departments = departmentService.getAllDepartments();
+		model.addAttribute("departments", departments);
 		return "landing/index";
 	}
 	

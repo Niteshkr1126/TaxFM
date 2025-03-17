@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head th:replace="~{fragments/fragments :: common-head}"></head>
+
+<body>
+<!-- top banner -->
+
+<div th:replace="~{fragments/fragments :: top-banner}"></div>
+
+<!-- nav bar -->
+
+<nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
+<main>
+	<!-- Employees Section -->
+	
+	<section class="roles-section">
+		<div class="container">
+			<div class="employees__table">
+				<section class="table__header">
+					<b><span>Roles</span></b>
+					<div class="input-group">
+						<input type="search" id="roleSearch" placeholder="Search Role..." oninput="filterRoles()"> <img th:src="@{/images/common/search.png}" alt="">
+					</div>
+					<a th:if="${showNewRoleAddition}" sec:authorize="hasAuthority('ADD_ROLE')" th:href="@{/roles/add}" class="create-link">Add New Role</a>
+				</section>
+				<section class="table__body">
+					<table>
+						<thead>
+						<tr>
+							<th>Role <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Description <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Authorities <span class="icon-arrow">&UpArrow;</span></th>
+							<th>Action</th>
+						</tr>
+						</thead>
+						<tr th:each="role : ${roles}">
+							<td><strong th:text="${#strings.substringAfter(role.role, 'ROLE_')}"></strong></td>
+							<td th:text="${role.description}"></td>
+							<td>
+								<span th:each="auth : ${role.authorities}">
+    							<span th:text="${auth.authority}"></span><br>
+								</span>
+							</td>
+							
+							<td class="action">
+								<!-- View Action -->
+								<a th:href="@{/roles/{roleId}(roleId=${role.roleId})}"> <img class="action-icon" th:src="@{/images/common/view.gif}" alt=""></a>
+								<!-- Edit Action, restricted to UPDATE_ROLE authority -->
+								<a sec:authorize="hasAuthority('UPDATE_ROLE')" th:href="@{/roles/{roleId}/edit(roleId=${role.roleId})}"> <img class="action-icon" th:src="@{/images/common/edit.gif}" alt=""></a>
+								<!-- Delete Action, restricted to DELETE_ROLE authority and not for the logged-in employee -->
+								<a sec:authorize="hasAuthority('DELETE_ROLE')" th:href="@{/roles/{roleId}/delete(roleId=${role.roleId})}" onclick="return confirm('Are you sure?')">
+									<img class="action-icon-delete" th:src="@{/images/common/delete.gif}" alt="">
+								</a>
+							</td>
+						</tr>
+					</table>
+				</section>
+			</div>
+		</div>
+	</section>
+</main>
+
+<!-- sub-footer -->
+
+<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+
+</body>
+</html>

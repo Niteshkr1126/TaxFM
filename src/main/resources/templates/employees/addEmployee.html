@@ -6,134 +6,200 @@
 
 <body>
 
-<!-- top banner -->
-
+<!-- Top Banner -->
 <div th:replace="~{fragments/fragments :: top-banner}"></div>
 
-<!-- nav bar -->
-
+<!-- Navigation Bar -->
 <nav th:replace="~{fragments/fragments :: nav-bar}"></nav>
 
-<!-- main content -->
-
+<!-- Main Content -->
 <main>
-	
+	<!-- Ensure you have MDB Bootstrap included -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css">
 	<!-- Employees Section -->
-	
-	<section class="employees-section">
+	<section class="employees-section" style=".5rem .5rem 0 0;">
 		<div class="container">
 			<a th:href="@{/employees}"><img class="action-icon" th:src="@{/images/common/back.png}" alt=""></a>
 			<h2>Employee Registration</h2>
 			<form method="post" th:action="@{/employees/add}" th:object="${employee}">
-				<div class="form-group">
-					<label for="username">Username:</label><br> <input class="form-control" id="username" name="username" placeholder="Username"
-																														 required="required"
-																														 th:field="*{username}" type="text"/>
+				<div class="card card-registration card-registration-2" style="border-radius: 15px;">
+					<div class="row g-0">
+						<div class="col-lg-6">
+							<div class="p-5">
+								<h3 class="fw-normal mb-5" style="color: #4835d4;">General Information</h3>
+								<div class="row">
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="text" placeholder=""
+														 id="firstName" name="firstName" th:field="*{firstName}"
+														 oninput="this.value = this.value.toUpperCase()">
+											<label for="firstName">First Name</label>
+										</div>
+									</div>
+									
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="text" placeholder=""
+														 id="lastName" name="lastName" th:field="*{lastName}"
+														 oninput="this.value = this.value.toUpperCase()">
+											<label for="lastName">Last Name</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="text" placeholder=""
+													 id="designation" name="designation" th:field="*{designation}"
+													 oninput="this.value = this.value.toUpperCase()">
+										<label for="designation">Designation</label>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="text" placeholder=""
+														 id="username" name="username" th:field="*{username}">
+											<label for="username">Username</label>
+										</div>
+									</div>
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="password" placeholder=""
+														 id="password" name="password" th:field="*{password}"
+														 oninput="this.value = this.value.toUpperCase()">
+											<label for="password">Password</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="date" placeholder=""
+													 id="dob" name="dob" th:field="*{dob}">
+										<label for="dob">Date of Birth</label>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-outline">
+											<select class="form-select" required type="text" placeholder=""
+															id="gender" name="gender" th:field="*{gender}"
+															oninput="this.value = this.value.toUpperCase()">
+												<option value="" disabled selected>--SELECT GENDER--</option>
+												<option value="MALE">MALE</option>
+												<option value="FEMALE">FEMALE</option>
+											</select>
+											<label for="gender">Gender</label>
+										</div>
+									</div>
+									
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-outline">
+											<select class="form-select" required type="text" placeholder=""
+															id="maritalStatus" name="maritalStatus" th:field="*{maritalStatus}"
+															oninput="this.value = this.value.toUpperCase()">
+												<option value="" disabled selected>--SELECT MARITAL STATUS--</option>
+												<option value="SINGLE">SINGLE</option>
+												<option value="MARRIED">MARRIED</option>
+											</select>
+											<label for="maritalStatus">Marital Status</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="text" placeholder=""
+													 id="agreement" name="agreement" th:field="*{agreement}"
+													 oninput="this.value = this.value.toUpperCase()">
+										<label for="agreement">Agreement</label>
+									</div>
+								</div>
+							
+							</div>
+						</div>
+						<div class="col-lg-6 bg-card text-white">
+							<div class="p-5">
+								<h3 class="fw-normal mb-5">Additional Details</h3>
+								
+								<div class="row">
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="text" placeholder="" maxlength="10"
+														 id="pan" name="pan" th:field="*{pan}"
+														 oninput="this.value = this.value.toUpperCase()">
+											<label for="pan">PAN</label>
+										</div>
+									</div>
+									
+									<div class="col-md-6 mb-4 pb-2">
+										<div class="form-group">
+											<input class="form-control" required type="text" placeholder="" maxlength="12"
+														 id="aadharCardNumber" name="aadharCardNumber" th:field="*{aadharCardNumber}"
+														 oninput="this.value = this.value.toUpperCase()">
+											<label for="aadharCardNumber">Aadhar</label>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-outline">
+										<select class="form-select" required type="text" placeholder=""
+														id="roles" name="roles" th:field="*{roles}">
+											<option value="" disabled selected>--SELECT ROLE--</option>
+											<option th:each="role : ${availableRoles}"
+															th:text="${#strings.replace(role.role, 'ROLE_', '')}"
+															th:value="${role.roleId}">
+											</option>
+										</select>
+										<label for="roles">Roles</label>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="text" placeholder=""
+													 id="address" name="address" th:field="*{address}"
+													 oninput="this.value = this.value.toUpperCase()">
+										<label for="address">Address</label>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="tel" placeholder=""
+													 id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
+										<label for="phoneNumber">Phone Number</label>
+									</div>
+								</div>
+								
+								<div class="mb-4 pb-2">
+									<div class="form-group">
+										<input class="form-control" required type="email" placeholder=""
+													 id="email" name="email" th:field="*{email}"
+													 oninput="this.value = this.value.toUpperCase()">
+										<label for="email">Email</label>
+									</div>
+								</div>
+								
+								<button type="submit" data-mdb-button-init="" data-mdb-ripple-init=""
+												class="btn btn-light btn-lg" data-mdb-ripple-color="dark"
+												data-mdb-button-initialized="true">Register Employee
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="firstName">First Name:</label><br> <input class="form-control" id="firstName" name="firstName" placeholder="First Name"
-																																oninput="this.value = this.value.toUpperCase()"
-																																required="required"
-																																th:field="*{firstName}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="lastName">Last Name:</label><br> <input class="form-control" id="lastName" name="lastName" placeholder="Last Name"
-																															oninput="this.value = this.value.toUpperCase()"
-																															required="required"
-																															th:field="*{lastName}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="designation">Designation:</label><br> <input class="form-control" id="designation" name="designation" placeholder="Designation"
-																																	 oninput="this.value = this.value.toUpperCase()"
-																																	 required="required"
-																																	 th:field="*{designation}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="email">Email:</label><br> <input class="form-control" id="email" name="email" placeholder="Email"
-																											 oninput="this.value = this.value.toUpperCase()"
-																											 required="required"
-																											 th:field="*{email}" type="email"/>
-				</div>
-				<div class="form-group">
-					<label for="phoneNumber">Phone Number:</label><br> <input class="form-control" id="phoneNumber" name="phoneNumber"
-																																		placeholder="Phone Number"
-																																		required="required"
-																																		th:field="*{phoneNumber}" type="tel"/>
-				</div>
-				<div class="form-group">
-					<label for="dob">Date of Birth:</label><br> <input class="form-control" id="dob" name="dob"
-																														 placeholder="Date of Birth"
-																														 required="required"
-																														 th:field="*{dob}" type="date"/>
-				</div>
-				<div class="form-group">
-					<label for="gender">Gender:</label><br> <select class="form-control" id="gender" name="gender" placeholder="Gender"
-																													oninput="this.value = this.value.toUpperCase()"
-																													required="required"
-																													th:field="*{gender}" type="text">
-					<option value="SELECT GENDER" selected>--SELECT GENDER--</option>
-					<option value="MALE">MALE</option>
-					<option value="FEMALE">FEMALE</option>
-				</select>
-				</div>
-				<div class="form-group">
-					<label for="maritalStatus">Marital Status:</label><br> <select class="form-control" id="maritalStatus" name="maritalStatus"
-																																				 oninput="this.value = this.value.toUpperCase()"
-																																				 required="required"
-																																				 th:field="*{maritalStatus}" type="text">
-					<option value="SELECT MARITAL STATUS" selected>--SELECT MARITAL STATUS--</option>
-					<option value="SINGLE">SINGLE</option>
-					<option value="MARRIED">MARRIED</option>
-				</select>
-				</div>
-				<div class="form-group">
-					<label for="address">Address:</label><br> <input class="form-control" id="address" name="address"
-																													 oninput="this.value = this.value.toUpperCase()"
-																													 placeholder="Address"
-																													 required="required"
-																													 th:field="*{address}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="pan">PAN:</label><br> <input class="form-control" id="pan" name="pan"
-																									 oninput="this.value = this.value.toUpperCase()"
-																									 placeholder="PAN"
-																									 required="required"
-																									 maxlength="10"
-																									 th:field="*{pan}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="aadharCardNumber">Aadhar Card Number:</label><br> <input class="form-control" id="aadharCardNumber" name="aadharCardNumber"
-																																							 placeholder="Aadhar Card Number"
-																																							 required="required"
-																																							 maxlength="12"
-																																							 th:field="*{aadharCardNumber}" type="number"/>
-				</div>
-				<div class="form-group">
-					<label for="agreement">Agreement:</label><br> <input class="form-control" id="agreement" name="agreement"
-																															 placeholder="Agreement"
-																															 required="required"
-																															 th:field="*{agreement}" type="text"/>
-				</div>
-				<div class="form-group">
-					<label for="password">Password:</label><br> <input class="form-control" id="password" name="password" placeholder="Password"
-																														 required="required"
-																														 th:field="*{password}" type="password"/>
-				</div>
-				<div class="form-group">
-					<label for="roles">Role:</label><br> <select class="form-control" id="roles" name="roles" required="required"
-																											 th:field="*{roles}" multiple="multiple">
-					<option th:each="role : ${availableRoles}" th:text="${role.role}"
-									th:value="${role.roleId}"></option>
-				</select>
-				</div>
-				<button class="btn btn-primary" type="submit">Register Employee</button>
 			</form>
 		</div>
 	</section>
 </main>
-
-<!-- sub-footer -->
-
-<div th:replace="~{fragments/fragments :: sub-footer}"></div>
+<footer th:replace="~{fragments/fragments :: sub-footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+<script th:src="@{/employees/employees.js}" defer></script>
 </body>
 </html>

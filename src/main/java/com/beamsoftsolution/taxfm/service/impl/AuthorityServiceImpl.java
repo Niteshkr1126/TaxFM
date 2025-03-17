@@ -24,7 +24,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	
 	@Override
 	public Authority getAuthorityById(Long id) throws TaxFMException {
-		Optional<Authority> optionalAuthority = authorityRepository.findById(id);
+		Optional<Authority> optionalAuthority = authorityRepository.findByAuthorityId(id);
 		if(optionalAuthority.isEmpty()) {
 			throw new TaxFMException("authority.not.found").withErrorCode(404);
 		}

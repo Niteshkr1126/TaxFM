@@ -5,11 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const formValidator = new FormValidator();
     const fileExporter = new FileExporter();
     const clickableRowManager = new ClickableRowManager();
+    const mdbInitializer = new MDBInitializer();
 
     tableManager.init();
     formValidator.init();
     fileExporter.init();
     clickableRowManager.init();
+    mdbInitializer.init();
+
+    components.forEach(component => {
+        if (typeof component.init === 'function') {
+            component.init();
+        }
+    });
 });
 
 class TableManager {
@@ -242,6 +250,38 @@ class ClickableRowManager {
                     window.location.href = `/employees/${employeeId}`;
                 }
             }
+        });
+    }
+}
+
+class MDBInitializer {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        if (typeof mdb === 'undefined') return;
+
+        // Initialize MDB components
+        mdb.Input.init();
+        this.initSelects();
+        this.initInputs();
+    }
+
+    initSelects() {
+        // Initialize all MDB Select components
+        document.querySelectorAll('[data-mdb-select-init]').forEach(select => {
+            new mdb.Select(select, {
+                search: true,
+                multiple: select.multiple
+            });
+        });
+    }
+
+    initInputs() {
+        // Initialize all MDB Input components
+        document.querySelectorAll('[data-mdb-input-init]').forEach(input => {
+            new mdb.Input(input);
         });
     }
 }

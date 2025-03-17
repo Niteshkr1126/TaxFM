@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/fragments :: services-head}"></head>
+<head th:replace="~{fragments/fragments :: profile-head}"></head>
 <body>
 <!-- top banner -->
 
@@ -16,12 +16,12 @@
 <main>
 	
 	<div class="container mt-5">
+		<!-- Service Rates Table -->
 		<h1 class="mb-4 text-center">Service Rates</h1>
-		<table class="table table-bordered table-striped table-hover">
+		<table class="table table-bordered table-striped table-hover table-container">
 			<thead class="table-dark">
 			<tr>
 				<th>#</th>
-				<th>Service Type</th>
 				<th>Category</th>
 				<th>Turnover Range</th>
 				<th>Rate (₹)</th>
@@ -32,7 +32,6 @@
 			<tbody>
 			<tr th:each="rate, iterStat : ${rates}">
 				<td th:text="${iterStat.index + 1}"></td>
-				<td th:text="${rate.serviceType}"></td>
 				<td th:text="${rate.category}"></td>
 				<td th:text="${rate.slabRange}"></td>
 				<td th:text="${rate.rate}"></td>

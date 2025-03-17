@@ -63,6 +63,15 @@ public class Customer {
 	)
 	private List<Role> roles;
 	
+	@Singular("authority")
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "customers_authorities",
+			joinColumns = { @JoinColumn(name = "customerId", referencedColumnName = "customerId") },
+			inverseJoinColumns = { @JoinColumn(name = "authorityId", referencedColumnName = "authorityId") }
+	)
+	private List<Authority> authorities;
+	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "customers_services",

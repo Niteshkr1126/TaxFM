@@ -177,7 +177,7 @@ public class EmployeeController {
 	
 	@PostMapping("/{employeeId}/subordinates/{subordinateId}/delete")
 	@PreAuthorize("hasAuthority('REMOVE_ASSIGNED_SUBORDINATE')")
-	public String removeAssignedSubordinate(@PathVariable Integer employeeId, @PathVariable Integer subordinateId, RedirectAttributes redirectAttributes) throws TaxFMException {
+	public String removeAssignedSubordinate(@PathVariable Integer employeeId, @PathVariable Integer subordinateId) throws TaxFMException {
 		employeeService.removeAssignedSubordinate(employeeId, subordinateId);
 		return "redirect:/employees/" + employeeId;
 	}

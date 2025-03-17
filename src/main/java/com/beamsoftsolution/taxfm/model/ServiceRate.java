@@ -17,27 +17,21 @@ public class ServiceRate {
 	@EqualsAndHashCode.Include
 	private Long serviceId;
 	
-	@Column(name = "service_type")
-	private String serviceType;
+	@ManyToOne
+	@JoinColumn(name = "department_id", nullable = false)
+	private Department department;
 	
-	@Column(name = "category")
 	private String category;
 	
-	@Column(name = "turnover_min")
 	private Double turnoverMin;
 	
-	@Column(name = "turnover_max")
 	private Double turnoverMax;
 	
-	@Column(name = "slab_range")
 	private String slabRange;
 	
-	@Column(name = "rate")
 	private Double rate;
 	
-	@Column(name = "gst_percentage")
 	private Double gstPercentage;
 	
-	@Column(name = "frequency")
 	private String frequency;
 }

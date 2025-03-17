@@ -1,5 +1,6 @@
 package com.beamsoftsolution.taxfm.service.impl;
 
+import com.beamsoftsolution.taxfm.model.Department;
 import com.beamsoftsolution.taxfm.model.ServiceRate;
 import com.beamsoftsolution.taxfm.repository.ServiceRateRepository;
 import com.beamsoftsolution.taxfm.service.ServiceRateService;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ServiceRateServiceImpl implements ServiceRateService {
 	
 	@Autowired
-	private ServiceRateRepository serviceRateRepository;
+	ServiceRateRepository serviceRateRepository;
 	
 	@Override
 	public List<ServiceRate> getAllServiceRates() {
@@ -27,17 +28,7 @@ public class ServiceRateServiceImpl implements ServiceRateService {
 	}
 	
 	@Override
-	public List<ServiceRate> getServiceRatesByType(String serviceType) {
-		return serviceRateRepository.findByServiceType(serviceType);
-	}
-	
-	@Override
-	public List<ServiceRate> getServiceRatesByCategory(String category) {
-		return serviceRateRepository.findByCategory(category);
-	}
-	
-	@Override
-	public List<ServiceRate> getServiceRatesByFrequency(String frequency) {
-		return serviceRateRepository.findByFrequency(frequency);
+	public List<ServiceRate> getServiceRatesByDepartment(Department department) {
+		return serviceRateRepository.findByDepartment(department);
 	}
 }

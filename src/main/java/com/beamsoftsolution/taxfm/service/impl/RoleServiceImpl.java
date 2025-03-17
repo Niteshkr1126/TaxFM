@@ -26,4 +26,9 @@ public class RoleServiceImpl implements RoleService {
 	public Role getRoleByRole(String role) throws TaxFMException {
 		return roleRepository.findByRole(role).orElseThrow(() -> new TaxFMException("Role '" + role + "' not found"));
 	}
+	
+	@Override
+	public long getTotalRolesCount() throws TaxFMException {
+		return roleRepository.count();
+	}
 }

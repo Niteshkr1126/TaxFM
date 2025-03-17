@@ -8,5 +8,6 @@ import java.util.List;
 public interface RoleService {
 	
 	List<Role> getAllRoles();
-	Role getRoleByRole(String role_customer) throws TaxFMException;
+	Role getRoleByRole(String role) throws TaxFMException;
+	long getTotalRolesCount() throws TaxFMException;
 }
